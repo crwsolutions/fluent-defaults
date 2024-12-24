@@ -35,8 +35,8 @@ public class ConditionalCustomerDefaulter : AbstractDefaulter<ConditionalCustome
 {
     public ConditionalCustomerDefaulter()
     {
-        DefaultFor(x => x.Number3, 3).When(x => x.Number1 != 5); 
-        DefaultFor(x => x.Number4, () => 4).When(x => x.Number1 == 5); 
+        DefaultFor(x => x.Number3, 3).When(x => x.Number1 != 5);
+        DefaultFor(x => x.Number4, () => 4).When(x => x.Number1 == 5);
     }
 }
 

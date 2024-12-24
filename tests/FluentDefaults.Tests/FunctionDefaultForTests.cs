@@ -23,6 +23,6 @@ public class FunctionCustomerDefaulter : AbstractDefaulter<FunctionCustomer>
 {
     public FunctionCustomerDefaulter()
     {
-        DefaultFor(x => x.Number4, () => 4); 
+        DefaultFor(x => x.Number4, () => 4);
     }
 }

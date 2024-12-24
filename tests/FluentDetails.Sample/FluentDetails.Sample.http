@@ -1,0 +1,13 @@
+@FluentDetails.Sample_HostAddress = https://localhost:7256
+
+POST {{FluentDetails.Sample_HostAddress}}/validate/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Name": "Colin",
+  "Email": "test@sample.com",
+  "IsVip": true
+}
+
+###
