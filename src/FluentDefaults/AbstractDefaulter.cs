@@ -3,12 +3,7 @@ using System.Reflection;
 
 namespace FluentDefaults;
 
-public interface IDefaulter<T>
-{
-    void Apply(T target);
-}
-
-public abstract class AbstractDefaulter<T>
+public abstract class AbstractDefaulter<T> : IDefaulter<T>
 {
     private readonly List<Rule<T>> _rules = [];
 
@@ -130,121 +125,5 @@ public abstract class AbstractDefaulter<T>
         }
 
         throw new Exception("Member not found");
-    }
-}
-
-internal class Rule<T>
-{
-    internal Action<T> Action { get; set; } = default!;
-    internal Func<T, bool>? Condition { get; private set; }
-
-    internal MemberExpression? MemberExpression { get; set; }
-
-    internal Rule(MemberExpression memberExpression)
-    {
-        MemberExpression = memberExpression;
-    }
-
-    internal Rule(Action<T> propertySelector)
-    {
-        Action = propertySelector;
-    }
-
-    internal void SetCondition(Func<T, bool> condition)
-    {
-        Condition = condition;
-    }
-
-    internal void Apply(T target)
-    {
-        Action(target);
-    }
-}
-
-public abstract class BaseRuleBuilder<T, TProperty>
-{
-    internal readonly Rule<T> _rule;
-
-    internal BaseRuleBuilder(Rule<T> rule)
-    {
-        _rule = rule;
-    }
-
-    public BaseRuleBuilder<T, TProperty> When(Func<T, bool> condition)
-    {
-        _rule.SetCondition(condition);
-        return this;
-    }
-}
-
-public class RuleBuilder<T, TProperty> : BaseRuleBuilder<T, TProperty>
-{
-    internal RuleBuilder(Rule<T> rule) : base(rule) { }
-
-    public void SetDefaulter(AbstractDefaulter<TProperty> defaulter)
-    {
-        if (_rule.MemberExpression?.Member is PropertyInfo propertyInfo)
-        {
-            var getMethod = propertyInfo.GetGetMethod();
-
-            if (getMethod != null)
-            {
-                _rule.Action = instance =>
-                {
-                    var currentValue = (TProperty?)getMethod.Invoke(instance, null);
-                    if (!Equals(currentValue, default(TProperty)))
-                    {
-                        defaulter.Apply(currentValue!);
-                    }
-                };
-            }
-            else
-            {
-                throw new Exception("Property has no set and get method");
-            }
-        }
-        else if (_rule.MemberExpression?.Member is FieldInfo fieldInfo)
-        {
-            _rule.Action = instance =>
-            {
-                var currentValue = (TProperty?)fieldInfo.GetValue(instance);
-                if (!Equals(currentValue, default(TProperty)))
-                {
-                    defaulter.Apply(currentValue!);
-                }
-            };
-        }
-        else
-        {
-            throw new Exception("Member not found");
-        }
-    }
-}
-public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TProperty>
-{
-    internal DefaultForEachRuleBuilder(Rule<T> rule) : base(rule) { }
-
-    public void SetDefaulter(AbstractDefaulter<TProperty> defaulter)
-    {
-        if (_rule.MemberExpression?.Member is PropertyInfo propertyInfo)
-        {
-            var getMethod = propertyInfo.GetGetMethod();
-
-            if (getMethod != null)
-            {
-                _rule.Action = instance =>
-                {
-                    var currentValue = (IEnumerable<TProperty>?)
-                        getMethod.Invoke(instance, null);
-                    if (!Equals(currentValue, default(TProperty)))
-                    {
-                        foreach (var element in currentValue!)
-                        {
-                            defaulter.Apply(element);
-                        }
-                    }
-                };
-            }
-        }
     }
 }
