@@ -1,6 +1,6 @@
 ﻿namespace FluentDefaults.Tests;
 
-public class DefaultForTests
+public class SimpleDefaultForTests
 {
     [Fact]
     public void Int_ShouldBeSetToDefault()
@@ -92,26 +92,6 @@ public class CustomerDefaulter : AbstractDefaulter<Customer>
     {
         DefaultFor(x => x.Number1, 1); // Default Number1 to 1
         DefaultFor(x => x.Number2, 2); // Default Number2 to null if not set
-        DefaultFor(x => x.Number3, 3); // Default Number2 to null if not set
+        DefaultFor(x => x.Number3, 3);
     }
 }
-
-public class Address
-{
-    public string Street { get; set; }
-    public string City { get; set; }
-}
-
-public class InvoiceLine
-{
-    public string Description { get; set; }
-    public decimal Amount { get; set; }
-}
-
-public class Invoice
-{
-    public Address Address { get; set; }
-    public List<InvoiceLine> Lines { get; set; }
-    public decimal Total;
-}
-
