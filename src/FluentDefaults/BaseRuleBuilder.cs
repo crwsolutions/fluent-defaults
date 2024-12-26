@@ -14,4 +14,16 @@ public abstract class BaseRuleBuilder<T, TProperty>
         _rule.SetCondition(condition);
         return this;
     }
+
+    public BaseRuleBuilder<T, TProperty> Is(TProperty defaultValue)
+    {
+        _rule.SetAction<TProperty>(defaultValue);
+        return this;
+    }
+
+    public BaseRuleBuilder<T, TProperty> Is(Func<TProperty> defaultFactory)
+    {
+        _rule.SetAction<TProperty>(defaultFactory);
+        return this;
+    }
 }
