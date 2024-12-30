@@ -10,4 +10,10 @@ Accept: application/json
   "IsVip": true
 }
 
-###
+### GET_DEFAULT
+
+GET {{FluentDetails.Sample_HostAddress}}/default/
+
+### GET_DEFAULT_ASYNC
+
+GET {{FluentDetails.Sample_HostAddress}}/default-async/
