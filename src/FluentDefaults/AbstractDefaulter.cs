@@ -16,17 +16,21 @@ public abstract class AbstractDefaulter<T> : AbstractDefaulterBase<T>, IDefaulte
 
 public abstract class AbstractAyncDefaulter<T> : AbstractDefaulterBase<T>
 {
-    public async ValueTask ApplyAsync(T target)
+    public async Task ApplyAsync(T target)
     {
-        await Task.Run(() =>
+        foreach (var rule in _rules)
         {
-            foreach (var rule in _rules)
+            if (rule.Condition == null || rule.Condition(target))
             {
-                if (rule.Condition == null || rule.Condition(target))
+                if (rule.Action != null)
                 {
                     rule.Apply(target);
                 }
+                else 
+                {
+                    await rule.ApplyAsync(target);
+                }
             }
-        });
+        }
     }
 }

@@ -34,6 +34,11 @@ public class Program
             return personService.Validate(person);
         });
 
+        app.MapGet("/default", (HttpContext httpContext) =>
+        {
+            return 42;
+        });
+
         app.Run();
     }
 }

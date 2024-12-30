@@ -11,3 +11,5 @@ Accept: application/json
 }
 
 ###
+
+GET {{FluentDetails.Sample_HostAddress}}/default/
