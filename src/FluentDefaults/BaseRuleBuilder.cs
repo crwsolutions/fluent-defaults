@@ -26,4 +26,10 @@ public abstract class BaseRuleBuilder<T, TProperty>
         _rule.SetAction<TProperty>(defaultFactory);
         return this;
     }
+
+    public BaseRuleBuilder<T, TProperty> IsAsync(Func<Task<TProperty>> defaultFactory)
+    {
+        _rule.SetAsyncAction(defaultFactory);
+        return this;
+    }
 }

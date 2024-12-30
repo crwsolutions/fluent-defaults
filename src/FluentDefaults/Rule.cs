@@ -40,7 +40,7 @@ internal class Rule<T>
     }
 
     internal void SetAsyncAction<TProperty>(
-        Func<TProperty> defaultValue
+        Func<Task<TProperty>> defaultValue
     )
     {
         if (MemberExpression.Member is PropertyInfo propertyInfo)
@@ -55,7 +55,8 @@ internal class Rule<T>
                     var currentValue = (TProperty?)getMethod.Invoke(instance, null);
                     if (Equals(currentValue, default(TProperty)))
                     {
-                        setMethod.Invoke(instance, [defaultValue]);
+                        var v = await defaultValue();
+                        setMethod.Invoke(instance, [v]);
                     }
                     await Task.CompletedTask;
                 };
@@ -72,7 +73,8 @@ internal class Rule<T>
                 var currentValue = (TProperty?)fieldInfo.GetValue(instance);
                 if (Equals(currentValue, default(TProperty)))
                 {
-                    fieldInfo.SetValue(instance, defaultValue);
+                    var v = await defaultValue();
+                    fieldInfo.SetValue(instance, v);
                 }
                 await Task.CompletedTask;
             };
