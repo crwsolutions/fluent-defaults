@@ -24,4 +24,3 @@ public class PersonAsyncDefaulter : AbstractAsyncDefaulter<Person>
         return decimal.Parse(n);
     }
 }
-
