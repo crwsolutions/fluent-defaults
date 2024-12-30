@@ -14,6 +14,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Configure logging
+        builder.Logging.ClearProviders();
+        builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
         // Add services to the container.
         builder.Services.AddAuthorization();
 
