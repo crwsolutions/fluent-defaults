@@ -19,7 +19,14 @@ public class Program
 
         builder.Services.AddScoped<PersonService>();
         builder.Services.AddScoped<IDefaulter<Person>, PersonDefaulter>();
+        builder.Services.AddScoped<IAsyncDefaulter<Person>, PersonAsyncDefaulter>();
         builder.Services.AddScoped<IValidator<Person>, PersonValidator>();
+
+        // Register the HTTP client
+        builder.Services.AddHttpClient("DefaultsClient", client =>
+        {
+            client.BaseAddress = new Uri("https://localhost:7256");
+        });
 
         var app = builder.Build();
 
@@ -29,14 +36,19 @@ public class Program
 
         app.UseAuthorization();
 
+        app.MapGet("/default-async", async (HttpContext httpContext, [FromServices] PersonService personService) =>
+        {
+            return await personService.DefaultAsync();
+        });
+
         app.MapPost("/validate", (HttpContext httpContext, [FromBody] Person person, [FromServices] PersonService personService) =>
         {
             return personService.Validate(person);
         });
 
-        app.MapGet("/default", (HttpContext httpContext) =>
+        app.MapGet("/default-discount", (HttpContext httpContext) =>
         {
-            return 42;
+            return 15;
         });
 
         app.Run();

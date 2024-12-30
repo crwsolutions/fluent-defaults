@@ -25,7 +25,7 @@ public class AsyncDefaulterTests
     }
 }
 
-public class AsyncCustomerDefaulter : AbstractAyncDefaulter<AsyncCustomer>
+public class AsyncCustomerDefaulter : AbstractAsyncDefaulter<AsyncCustomer>
 {
     public AsyncCustomerDefaulter()
     {
