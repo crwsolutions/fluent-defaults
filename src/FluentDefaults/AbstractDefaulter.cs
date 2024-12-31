@@ -1,11 +1,15 @@
-﻿using System.Linq.Expressions;
+﻿namespace FluentDefaults;
 
-namespace FluentDefaults;
-
-public abstract class AbstractDefaulter<T> : IDefaulter<T>
+/// <summary>
+/// Provides an abstract base class for applying default values to properties or fields of an object.
+/// </summary>
+/// <typeparam name="T">The type of the object to which the default values are applied.</typeparam>
+public abstract class AbstractDefaulter<T> : AbstractDefaulterBase<T>, IDefaulter<T>
 {
-    private readonly List<Rule<T>> _rules = [];
-
+    /// <summary>
+    /// Synchronously applies the default values to the specified target object.
+    /// </summary>
+    /// <param name="target">The target object to which the default values are applied.</param>
     public void Apply(T target)
     {
         foreach (var rule in _rules)
@@ -15,49 +19,5 @@ public abstract class AbstractDefaulter<T> : IDefaulter<T>
                 rule.Apply(target);
             }
         }
-    }
-
-    public RuleBuilder<T, TProperty> DefaultFor<TProperty>(
-        Expression<Func<T, TProperty>> expression,
-        TProperty defaultValue
-    )
-    {
-        var rule = new Rule<T>((MemberExpression)expression.Body);
-        rule.SetAction<TProperty>(defaultValue);
-        _rules.Add(rule);
-        return new RuleBuilder<T, TProperty>(rule);
-    }
-
-    public RuleBuilder<T, TProperty> DefaultFor<TProperty>(
-        Expression<Func<T, TProperty>> expression,
-        Func<TProperty> defaultFactory
-    )
-    {
-        var rule = new Rule<T>((MemberExpression)expression.Body);
-        rule.SetAction<TProperty>(defaultFactory);
-        _rules.Add(rule);
-        return new RuleBuilder<T, TProperty>(rule);
-    }
-
-    public RuleBuilder<T, TProperty> DefaultFor<TProperty>(
-        Expression<Func<T, TProperty>> expression
-    )
-    {
-        var rule = new Rule<T>((MemberExpression)expression.Body);
-
-        _rules.Add(rule);
-
-        return new RuleBuilder<T, TProperty>(rule);
-    }
-
-    public DefaultForEachRuleBuilder<T, TProperty> DefaultForEach<TProperty>(
-        Expression<Func<T, IEnumerable<TProperty>>> expression
-    )
-    {
-        var rule = new Rule<T>((MemberExpression)expression.Body);
-
-        _rules.Add(rule);
-
-        return new DefaultForEachRuleBuilder<T, TProperty>(rule);
     }
 }
