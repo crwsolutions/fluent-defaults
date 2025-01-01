@@ -1,5 +1,8 @@
 ﻿namespace FluentDefaults;
 
+/// <summary>
+/// Provides a base class for building rules that specify default values for properties or fields.
+/// </summary>
 public abstract class BaseRuleBuilder<T, TProperty>
 {
     internal readonly Rule<T> _rule;

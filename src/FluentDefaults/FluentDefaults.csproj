@@ -14,7 +14,7 @@
 		<RepositoryUrl>https://github.com/crwsolutions/fluent-defaults.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>Defaults;Defaulting;Utility;Library</PackageTags>
-		<PackageProjectUrl>https://github.com/crwsolutions/fluent-defaults</PackageProjectUrl>
+		<PackageProjectUrl>https://crwsolutions.github.io/fluent-defaults</PackageProjectUrl>
 		<Copyright>(c) Colin Wilmans</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<IsPackable>true</IsPackable>
@@ -23,6 +23,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Title>Fluent Defaults</Title>
 		<PackageReleaseNotes>First()</PackageReleaseNotes>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -2,6 +2,9 @@
 
 namespace FluentDefaults;
 
+/// <summary>
+/// Provides functionality to set default values for each element in a collection property of a rule.
+/// </summary>
 public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TProperty>
 {
     internal DefaultForEachRuleBuilder(Rule<T> rule) : base(rule) { }
