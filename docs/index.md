@@ -2,6 +2,20 @@
 
 Welcome to the documentation for the `FluentDefaults` library. This library provides a fluent interface for defining and applying default values to properties or fields of an object.
 
+Example:
+```csharp
+public class PersonDefaulter : AbstractDefaulter<Person>
+{
+    public PersonDefaulter()
+    {
+        DefaultFor(x => x.Id).Is(() => Guid.NewGuid());
+        DefaultFor(x => x.IsVip).Is(false);
+        DefaultFor(x => x.Discount).Is(20m).When(x => x.IsVip == true);
+        DefaultFor(x => x.Discount).Is(10m).When(x => x.IsVip == false);
+    }
+}
+```
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -51,6 +65,7 @@ public class CustomerDefaulter : AbstractDefaulter<Customer>
 
 You can then apply the default values to an instance of the `Customer` class:
 
+```csharp
 var customer = new Customer();
 var defaulter = new CustomerDefaulter();
 
@@ -59,6 +74,7 @@ defaulter.Apply(customer);
 Console.WriteLine(customer.Number1); // Output: 1 
 Console.WriteLine(customer.Number2); // Output: 2 
 Console.WriteLine(customer.Number3); // Output: 3
+```
 
 ## Complex Properties
 
@@ -69,42 +85,47 @@ The `FluentDefaults` library also supports defining default values for complex p
 ```csharp
 using FluentDefaults;
 
-public class Order 
-{ 
-    public List Items { get; set; }
-}
-
-public class Item 
-{ 
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-}
-
-public class OrderDefaulter : AbstractDefaulter<Order>
-{ 
-    public OrderDefaulter()
-    { 
-        DefaultForEach(x => x.Items).DefaultFor(x => x.Price, 9.99m);
+public class CollectionAddressDefaulter : AbstractDefaulter<CollectionAddress>
+{
+    public CollectionAddressDefaulter()
+    {
+        DefaultFor(x => x.Street, "Default Street");
+        DefaultFor(x => x.City, "Default City");
     }
+}
+
+public class CollectionCustomerDefaulter : AbstractDefaulter<CollectionCustomer>
+{
+    public CollectionCustomerDefaulter()
+    {
+        DefaultForEach(x => x.Addresses1).SetDefaulter(new CollectionAddressDefaulter());
+        DefaultForEach(x => x.Addresses2).SetDefaulter(new CollectionAddressDefaulter());
+    }
+}
+
+public class CollectionCustomer
+{
+    public CollectionAddress[] Addresses1 { get; set; } = [new CollectionAddress()];
+    public List<CollectionAddress> Addresses2 { get; set; } = [new CollectionAddress()];
+}
+
+public class CollectionAddress
+{
+    public string? Street { get; set; }
+    public string? City { get; set; }
 }
 ```
 
 You can then apply the default values to an instance of the `Order` class:
 
 ```csharp
-var order = new Order 
-{ 
-    Items = new List { 
-        new Item { Name = "Item1" },
-        new Item { Name = "Item2", Price = 19.99m }
-    }
-};
+var customer = new CollectionCustomer();
+var defaulter = new CollectionCustomerDefaulter();
 
-var defaulter = new OrderDefaulter();
-defaulter.Apply(order);
+defaulter.Apply(customer);
 
-Console.WriteLine(order.Items[0].Price); // Output: 9.99 
-Console.WriteLine(order.Items[1].Price); // Output: 19.99
+Console.WriteLine(customer.Addresses1[0].Street); // Output: 'Default Street'
+Console.WriteLine(customer.Addresses2.First().Street); // Output: 'Default Street'
 ```
 
 
