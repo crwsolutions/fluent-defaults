@@ -1,5 +1,6 @@
 title: Fluent defaults
 description: Documentation for the FluentDefaults library
+theme: jekyll-theme-cayman
 markdown: kramdown
 
 # Sidebar configuration
