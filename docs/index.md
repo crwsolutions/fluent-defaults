@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Home"
+---
+
 # FluentDefaults Documentation
 
 Welcome to the documentation for the `FluentDefaults` library. This library provides a fluent interface for defining and applying default values to properties or fields of an object.

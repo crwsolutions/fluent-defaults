@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Dependency Injection"
+---
+
 # Dependency Injection
 
 Defaulters can be used with any dependency injection library, such as `Microsoft.Extensions.DependencyInjection`. To inject a defaulter for a specific model, you should register the defaulter with the service provider as `IDefaulter<T>`, where `T` is the type of object being validated.
