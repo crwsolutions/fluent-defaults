@@ -1,0 +1,11 @@
+title: FluentDefaults Documentation
+description: Documentation for the FluentDefaults library
+theme: jekyll-theme-cayman
+markdown: kramdown
+
+# Site navigation
+nav:
+  - title: "Home"
+    url: "/"
+  - title: "Dependency Injection"
+    url: "/di"
