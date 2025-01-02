@@ -9,3 +9,10 @@ nav:
     url: "/"
   - title: "Dependency Injection"
     url: "/di"
+
+# Use the same navigation for the sidebar
+sidebar: *nav
+
+# Breadcrumb
+breadcrumb_home_label : "Home"
+breadcrumb_separator  : ">"
