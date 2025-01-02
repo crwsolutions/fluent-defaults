@@ -11,7 +11,11 @@ nav:
     url: "/di"
 
 # Use the same navigation for the sidebar
-sidebar: *nav
+sidebar:
+  - title: "Home"
+    url: "/"
+  - title: "Dependency Injection"
+    url: "/di"    
 
 # Breadcrumb
 breadcrumb_home_label : "Home"
