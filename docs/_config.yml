@@ -1,4 +1,4 @@
-title: FluentDefaults Documentation
+title: Fluent defaults
 description: Documentation for the FluentDefaults library
 theme: jekyll-theme-cayman
 markdown: kramdown
@@ -11,11 +11,13 @@ nav:
     url: "/di"
 
 # Use the same navigation for the sidebar
-sidebar:
-  - title: "Home"
-    url: "/"
-  - title: "Dependency Injection"
-    url: "/di"    
+sidebar: 
+- title: "Navigation" 
+  items:
+    - title: "Home"
+      url: "/"
+    - title: "Dependency Injection"
+      url: "/di"    
 
 # Breadcrumb
 breadcrumb_home_label : "Home"
