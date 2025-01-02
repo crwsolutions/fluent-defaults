@@ -6,9 +6,9 @@ markdown: kramdown
 sidebar:
   nav:
     - title: "Home"
-      url: "/"
+      url: "/fluent-defaults"
     - title: "Dependency Injection"
-      url: "/di.html" 
+      url: "di" 
 
 # Breadcrumb
 breadcrumb_home_label : "Home"
