@@ -94,8 +94,8 @@ public class CollectionAddressDefaulter : AbstractDefaulter<CollectionAddress>
 {
     public CollectionAddressDefaulter()
     {
-        DefaultFor(x => x.Street, "Default Street");
-        DefaultFor(x => x.City, "Default City");
+        DefaultFor(x => x.Street).Is("Default Street");
+        DefaultFor(x => x.City).Is("Default City");
     }
 }
 
@@ -103,8 +103,8 @@ public class CollectionCustomerDefaulter : AbstractDefaulter<CollectionCustomer>
 {
     public CollectionCustomerDefaulter()
     {
-        DefaultForEach(x => x.Addresses1).SetDefaulter(new CollectionAddressDefaulter());
-        DefaultForEach(x => x.Addresses2).SetDefaulter(new CollectionAddressDefaulter());
+        ForEach(x => x.Addresses1).SetDefaulter(new CollectionAddressDefaulter());
+        ForEach(x => x.Addresses2).SetDefaulter(new CollectionAddressDefaulter());
     }
 }
 
