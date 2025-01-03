@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentDefaults.Tests.NBomber", "tests\FluentDefaults.Tests.NBomber\FluentDefaults.Tests.NBomber.csproj", "{04A24009-BA8E-4A7E-92F4-8274B1341282}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentDefaults.Tests.Benchmark", "tests\FluentDefaults.Tests.Benchmark\FluentDefaults.Tests.Benchmark.csproj", "{17587A38-DB0E-4829-8383-9DCD133A43A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{04A24009-BA8E-4A7E-92F4-8274B1341282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04A24009-BA8E-4A7E-92F4-8274B1341282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04A24009-BA8E-4A7E-92F4-8274B1341282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17587A38-DB0E-4829-8383-9DCD133A43A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17587A38-DB0E-4829-8383-9DCD133A43A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17587A38-DB0E-4829-8383-9DCD133A43A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17587A38-DB0E-4829-8383-9DCD133A43A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
