@@ -26,8 +26,6 @@ public class PersonDefaulter : AbstractDefaulter<Person>
 - [Overview](#overview)
 - [Installation](#installation)
 - [Creating your first defaulter](#creating-your-first-defaulter)
-- [Complex Properties](#complex-properties)
-- [Async Defaulters](#async-defaulters)
 
 ## Overview
 
@@ -80,58 +78,3 @@ Console.WriteLine(customer.Number1); // Output: 1
 Console.WriteLine(customer.Number2); // Output: 2 
 Console.WriteLine(customer.Number3); // Output: 3
 ```
-
-## Complex Properties
-
-The `FluentDefaults` library also supports defining default values for complex properties and collections.
-
-### Example
-
-```csharp
-using FluentDefaults;
-
-public class CollectionAddressDefaulter : AbstractDefaulter<CollectionAddress>
-{
-    public CollectionAddressDefaulter()
-    {
-        DefaultFor(x => x.Street).Is("Default Street");
-        DefaultFor(x => x.City).Is("Default City");
-    }
-}
-
-public class CollectionCustomerDefaulter : AbstractDefaulter<CollectionCustomer>
-{
-    public CollectionCustomerDefaulter()
-    {
-        ForEach(x => x.Addresses1).SetDefaulter(new CollectionAddressDefaulter());
-        ForEach(x => x.Addresses2).SetDefaulter(new CollectionAddressDefaulter());
-    }
-}
-
-public class CollectionCustomer
-{
-    public CollectionAddress[] Addresses1 { get; set; } = [new CollectionAddress()];
-    public List<CollectionAddress> Addresses2 { get; set; } = [new CollectionAddress()];
-}
-
-public class CollectionAddress
-{
-    public string? Street { get; set; }
-    public string? City { get; set; }
-}
-```
-
-You can then apply the default values to an instance of the `Order` class:
-
-```csharp
-var customer = new CollectionCustomer();
-var defaulter = new CollectionCustomerDefaulter();
-
-defaulter.Apply(customer);
-
-Console.WriteLine(customer.Addresses1[0].Street); // Output: 'Default Street'
-Console.WriteLine(customer.Addresses2.First().Street); // Output: 'Default Street'
-```
-
-
-
