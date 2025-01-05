@@ -37,9 +37,9 @@ public class ComplexCustomerDefaulter : AbstractDefaulter<ComplexCustomer>
 
 public class ComplexCustomer
 {
-    public Address4? Address1 { get; set; } = new Address4();
-    public Address4? Address2 { get; set; }
-    public Address4? Address3 { get; set; }
+    public Address4 Address1 { get; set; } = new Address4();
+    public Address4 Address2 { get; set; } = default!;
+    public Address4 Address3 { get; set; } = default!;
 }
 
 public class Address4
