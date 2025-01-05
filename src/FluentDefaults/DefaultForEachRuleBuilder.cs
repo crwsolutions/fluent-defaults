@@ -44,46 +44,60 @@ public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TPrope
     /// <param name="expression">An expression that specifies the property or field.</param>
     /// <param name="defaultValue">The default value to be set.</param>
     /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
-    public void DefaultFor<TElementProperty>(
+    public BaseRuleBuilder<T, TProperty> DefaultFor<TElementProperty>(
         Expression<Func<TProperty, TElementProperty>> expression,
         TElementProperty defaultValue
     )
     {
-        if (_rule.MemberExpression?.Member is PropertyInfo propertyInfo)
-        {
-            var getMethod = propertyInfo.GetGetMethod();
+        _rule.ChildMemberExpression = (MemberExpression)expression.Body;
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultValue);
 
-            var childExpression = (MemberExpression)expression.Body;
-
-            if (childExpression.Member is PropertyInfo childPropertyInfo)
-            {
-                var childGetMethod = childPropertyInfo.GetGetMethod();
-                var childSetMethod = childPropertyInfo.GetSetMethod();
-
-                if (getMethod != null && childGetMethod != null && childSetMethod != null)
-                {
-                    _rule.Action = instance =>
-                    {
-                        var currentValue = (IEnumerable<TProperty>?)
-                            getMethod.Invoke(instance, null);
-                        if (!Equals(currentValue, default(TProperty)))
-                        {
-
-                            {
-                                var getMethod = propertyInfo.GetGetMethod();
-                                foreach (var element in currentValue!)
-                                {
-                                    var childValue = (TElementProperty?)childGetMethod.Invoke(element, null);
-                                    if (Equals(childValue, default(TElementProperty)))
-                                    { 
-                                        childSetMethod.Invoke(element, [defaultValue]);
-                                    }
-                                }
-                            }
-                        }
-                    };
-                }
-            }
-        }
+        return this;
     }
+
+    /// <summary>
+    /// Defines a default value for a specified property or field of each element in the collection.
+    /// </summary>
+    /// <param name="expression">An expression that specifies the property or field.</param>
+    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
+    public DefaultForEachRuleBuilder<T, TProperty> DefaultFor<TElementProperty>(
+        Expression<Func<TProperty, TElementProperty>> expression
+    )
+    {
+        _rule.ChildMemberExpression = (MemberExpression)expression.Body;
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies a default value for the property or field.
+    /// </summary>
+    /// <param name="defaultValue">The default value to be set.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    public DefaultForEachRuleBuilder<T, TProperty> Is<TElementProperty>(TElementProperty defaultValue)
+    {
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultValue);
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies a factory function that produces the default value for the property or field.
+    /// </summary>
+    /// <param name="defaultFunction">A function that produces the default value.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    public DefaultForEachRuleBuilder<T, TProperty> Is<TElementProperty>(Func<TElementProperty> defaultFunction)
+    {
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultFunction);
+        return this;
+    }
+
+    ///// <summary>
+    ///// Specifies a condition that must be met for the default value to be applied.
+    ///// </summary>
+    ///// <param name="condition">A function that defines the condition.</param>
+    ///// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    //public DefaultForEachRuleBuilder<T, TProperty> When(Func<TElementProperty, bool> condition)
+    //{
+    //    _rule.SetCondition(condition);
+    //    return this;
+    //}
 }

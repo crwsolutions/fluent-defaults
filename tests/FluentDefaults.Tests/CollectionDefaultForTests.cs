@@ -22,7 +22,8 @@ public class CollectionDefaultForTests
 
         defaulter.Apply(customer);
 
-        Assert.Equal("- unknown -", customer.Addresses2.First().City);
+        Assert.Equal("- unknown city -", customer.Addresses2.First().City);
+        Assert.Equal("- unknown street -", customer.Addresses2.First().Street);
     }
 }
 
@@ -48,7 +49,8 @@ public class CollectionCustomerWithDefaultForDefaulter : AbstractDefaulter<Colle
 {
     public CollectionCustomerWithDefaultForDefaulter()
     {
-        ForEach(x => x.Addresses2).DefaultFor(x => x.City, "- unknown -");
+        ForEach(x => x.Addresses2).DefaultFor(x => x.City, "- unknown city -");
+        ForEach(x => x.Addresses2).DefaultFor(x => x.Street).Is("- unknown street -");
     }
 }
 
