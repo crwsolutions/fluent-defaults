@@ -1,11 +1,13 @@
-﻿namespace FluentDefaults.Tests;
+﻿using FluentDefaults.Tests.Model;
+
+namespace FluentDefaults.Tests;
 
 public class FunctionDefaultForTests
 {
     [Fact]
     public void IntWithDefaultFunction_ShouldBeSetToDefault()
     {
-        var customer = new FunctionCustomer();
+        var customer = new Customer();
         var defaulter = new FunctionCustomerDefaulter();
 
         defaulter.Apply(customer);
@@ -14,14 +16,9 @@ public class FunctionDefaultForTests
     }
 }
 
-public class FunctionCustomer
+internal sealed class FunctionCustomerDefaulter : AbstractDefaulter<Customer>
 {
-    public int Number4 { get; set; }
-}
-
-public class FunctionCustomerDefaulter : AbstractDefaulter<FunctionCustomer>
-{
-    public FunctionCustomerDefaulter()
+    internal FunctionCustomerDefaulter()
     {
         DefaultFor(x => x.Number4, () => 4);
     }

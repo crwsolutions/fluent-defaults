@@ -1,22 +1,24 @@
-﻿namespace FluentDefaults.Tests;
+﻿using FluentDefaults.Tests.Model;
+
+namespace FluentDefaults.Tests;
 
 public class ConditionalDefaultForTests
 {
     [Fact]
     public void IntWithPassingCondition_ShouldBeSetToDefault()
     {
-        var customer = new ConditionalCustomer();
+        var customer = new Customer();
         var defaulter = new ConditionalCustomerDefaulter();
 
         defaulter.Apply(customer);
 
-        Assert.Equal(0, customer.Number3);
+        Assert.Equal(0, customer.FieldNumber3);
     }
 
     [Fact]
     public void IntWithFailingCondition_ShouldNotBeSetToDefault()
     {
-        var customer = new ConditionalCustomer();
+        var customer = new Customer();
         var defaulter = new ConditionalCustomerDefaulter();
 
         defaulter.Apply(customer);
@@ -24,19 +26,13 @@ public class ConditionalDefaultForTests
         Assert.Equal(4, customer.Number4);
     }
 }
-public class ConditionalCustomer
-{
-    public int Number1 { get; set; } = 5;
-    public int Number3 { get; set; }
-    public int Number4 { get; set; }
-}
 
-public class ConditionalCustomerDefaulter : AbstractDefaulter<ConditionalCustomer>
+internal sealed class ConditionalCustomerDefaulter : AbstractDefaulter<Customer>
 {
-    public ConditionalCustomerDefaulter()
+    internal  ConditionalCustomerDefaulter()
     {
-        DefaultFor(x => x.Number3, 3).When(x => x.Number1 != 5);
-        DefaultFor(x => x.Number4, () => 4).When(x => x.Number1 == 5);
+        DefaultFor(x => x.FieldNumber3, 3).When(x => x.Number5 != 5);
+        DefaultFor(x => x.Number4, () => 4).When(x => x.Number5 == 5);
     }
 }
 
