@@ -11,7 +11,7 @@ internal class Rule<T>
 
     internal Func<T, bool>? Condition { get; private set; }
 
-    internal MemberExpression MemberExpression { get; }
+    internal MemberExpression MemberExpression { get; set; }
 
     internal Rule(MemberExpression memberExpression)
     {

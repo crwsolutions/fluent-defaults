@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq.Expressions;
+using System.Reflection;
 
 namespace FluentDefaults;
 
@@ -33,6 +34,55 @@ public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TPrope
                         }
                     }
                 };
+            }
+        }
+    }
+
+    /// <summary>
+    /// Defines a default value for a specified property or field of each element in the collection.
+    /// </summary>
+    /// <param name="expression">An expression that specifies the property or field.</param>
+    /// <param name="defaultValue">The default value to be set.</param>
+    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
+    public void DefaultFor<TElementProperty>(
+        Expression<Func<TProperty, TElementProperty>> expression,
+        TElementProperty defaultValue
+    )
+    {
+        if (_rule.MemberExpression?.Member is PropertyInfo propertyInfo)
+        {
+            var getMethod = propertyInfo.GetGetMethod();
+
+            var childExpression = (MemberExpression)expression.Body;
+
+            if (childExpression.Member is PropertyInfo childPropertyInfo)
+            {
+                var childGetMethod = childPropertyInfo.GetGetMethod();
+                var childSetMethod = childPropertyInfo.GetSetMethod();
+
+                if (getMethod != null && childGetMethod != null && childSetMethod != null)
+                {
+                    _rule.Action = instance =>
+                    {
+                        var currentValue = (IEnumerable<TProperty>?)
+                            getMethod.Invoke(instance, null);
+                        if (!Equals(currentValue, default(TProperty)))
+                        {
+
+                            {
+                                var getMethod = propertyInfo.GetGetMethod();
+                                foreach (var element in currentValue!)
+                                {
+                                    var childValue = (TElementProperty?)childGetMethod.Invoke(element, null);
+                                    if (Equals(childValue, default(TElementProperty)))
+                                    { 
+                                        childSetMethod.Invoke(element, [defaultValue]);
+                                    }
+                                }
+                            }
+                        }
+                    };
+                }
             }
         }
     }
