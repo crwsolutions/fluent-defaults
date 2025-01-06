@@ -62,7 +62,7 @@ public abstract class AbstractDefaulterBase<T>
     /// </summary>
     /// <param name="expression">An expression that specifies the collection property or field.</param>
     /// <returns>A <see cref="DefaultForEachRuleBuilder{T, TProperty}"/> for further configuration.</returns>
-    public DefaultForEachRuleBuilder<T, TProperty> DefaultForEach<TProperty>(
+    public DefaultForEachRuleBuilder<T, TProperty> ForEach<TProperty>(
         Expression<Func<T, IEnumerable<TProperty>>> expression
     )
     {

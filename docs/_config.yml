@@ -8,7 +8,13 @@ sidebar:
     - title: "Home"
       url: "/fluent-defaults"
     - title: "Dependency Injection"
-      url: "di" 
+      url: "di"
+    - title: "Complex properties"
+      url: "complex"
+    - title: "Collections"
+      url: "collection"
+    - title: "Async"
+      url: "async"
 
 # Breadcrumb
 breadcrumb_home_label : "Home"

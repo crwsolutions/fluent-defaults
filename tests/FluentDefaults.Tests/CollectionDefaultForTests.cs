@@ -1,45 +1,57 @@
-﻿namespace FluentDefaults.Tests;
+﻿using FluentDefaults.Tests.Model;
+
+namespace FluentDefaults.Tests;
 
 public class CollectionDefaultForTests
 {
     [Fact]
-    public void IntWithFailingCondition_ShouldNotBeSetToDefault()
+    public void CollectionWithDefaulter_ShouldGetThatDefault()
     {
-        var customer = new CollectionCustomer();
-        var defaulter = new CollectionCustomerDefaulter();
+        var customer = new Customer();
+        var defaulter = new CollectionCustomerWithDefaulterDefaulter();
 
         defaulter.Apply(customer);
 
         Assert.Equal("Default Street", customer.Addresses1[0].Street);
-        Assert.Equal("Default Street", customer.Addresses2.First().Street);
+        Assert.Equal("Default City", customer.Addresses1[0].City);
     }
-}
-public class CollectionAddressDefaulter : AbstractDefaulter<CollectionAddress>
-{
-    public CollectionAddressDefaulter()
+
+    [Fact]
+    public void CollectionWithDefaultFor_ShouldGetThatDefault()
     {
-        DefaultFor(x => x.Street, "Default Street");
-        DefaultFor(x => x.City, "Default City");
+        var customer = new Customer();
+        var defaulter = new CollectionCustomerWithDefaultForDefaulter();
+
+        defaulter.Apply(customer);
+
+        Assert.Equal("- unknown city -", customer.Addresses2.First().City);
+        Assert.Equal("- unknown street -", customer.Addresses2.First().Street);
     }
 }
 
-public class CollectionCustomerDefaulter : AbstractDefaulter<CollectionCustomer>
+internal sealed class CollectionAddressDefaulter : AbstractDefaulter<Address>
 {
-    public CollectionCustomerDefaulter()
+    internal CollectionAddressDefaulter()
     {
-        DefaultForEach(x => x.Addresses1).SetDefaulter(new CollectionAddressDefaulter());
-        DefaultForEach(x => x.Addresses2).SetDefaulter(new CollectionAddressDefaulter());
+        DefaultFor(x => x.Street).Is("Default Street");
+        DefaultFor(x => x.City).Is("Default City");
     }
 }
 
-public class CollectionCustomer
+internal sealed class CollectionCustomerWithDefaulterDefaulter : AbstractDefaulter<Customer>
 {
-    public CollectionAddress[] Addresses1 { get; set; } = [new CollectionAddress()];
-    public List<CollectionAddress> Addresses2 { get; set; } = [new CollectionAddress()];
+    internal CollectionCustomerWithDefaulterDefaulter()
+    {
+        ForEach(x => x.Addresses1).SetDefaulter(new CollectionAddressDefaulter());
+        ForEach(x => x.Addresses2).SetDefaulter(new CollectionAddressDefaulter());
+    }
 }
 
-public class CollectionAddress
+internal sealed class CollectionCustomerWithDefaultForDefaulter : AbstractDefaulter<Customer>
 {
-    public string? Street { get; set; }
-    public string? City { get; set; }
+    internal CollectionCustomerWithDefaultForDefaulter()
+    {
+        ForEach(x => x.Addresses2).DefaultFor(x => x.City, "- unknown city -");
+        ForEach(x => x.Addresses2).DefaultFor(x => x.Street).Is("- unknown street -");
+    }
 }

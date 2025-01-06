@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq.Expressions;
+using System.Reflection;
 
 namespace FluentDefaults;
 
@@ -36,4 +37,67 @@ public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TPrope
             }
         }
     }
+
+    /// <summary>
+    /// Defines a default value for a specified property or field of each element in the collection.
+    /// </summary>
+    /// <param name="expression">An expression that specifies the property or field.</param>
+    /// <param name="defaultValue">The default value to be set.</param>
+    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
+    public BaseRuleBuilder<T, TProperty> DefaultFor<TElementProperty>(
+        Expression<Func<TProperty, TElementProperty>> expression,
+        TElementProperty defaultValue
+    )
+    {
+        _rule.ChildMemberExpression = (MemberExpression)expression.Body;
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultValue);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Defines a default value for a specified property or field of each element in the collection.
+    /// </summary>
+    /// <param name="expression">An expression that specifies the property or field.</param>
+    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
+    public DefaultForEachRuleBuilder<T, TProperty> DefaultFor<TElementProperty>(
+        Expression<Func<TProperty, TElementProperty>> expression
+    )
+    {
+        _rule.ChildMemberExpression = (MemberExpression)expression.Body;
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies a default value for the property or field.
+    /// </summary>
+    /// <param name="defaultValue">The default value to be set.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    public DefaultForEachRuleBuilder<T, TProperty> Is<TElementProperty>(TElementProperty defaultValue)
+    {
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultValue);
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies a factory function that produces the default value for the property or field.
+    /// </summary>
+    /// <param name="defaultFunction">A function that produces the default value.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    public DefaultForEachRuleBuilder<T, TProperty> Is<TElementProperty>(Func<TElementProperty> defaultFunction)
+    {
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultFunction);
+        return this;
+    }
+
+    ///// <summary>
+    ///// Specifies a condition that must be met for the default value to be applied.
+    ///// </summary>
+    ///// <param name="condition">A function that defines the condition.</param>
+    ///// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    //public DefaultForEachRuleBuilder<T, TProperty> When(Func<TElementProperty, bool> condition)
+    //{
+    //    _rule.SetCondition(condition);
+    //    return this;
+    //}
 }

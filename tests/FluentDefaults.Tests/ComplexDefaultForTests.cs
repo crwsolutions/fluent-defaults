@@ -1,11 +1,13 @@
-﻿namespace FluentDefaults.Tests;
+﻿using FluentDefaults.Tests.Model;
+
+namespace FluentDefaults.Tests;
 
 public class ComplexDefaultForTests
 {
     [Fact]
     public void IntWithFailingCondition_ShouldNotBeSetToDefault()
     {
-        var customer = new ComplexCustomer();
+        var customer = new Customer();
         var defaulter = new ComplexCustomerDefaulter();
 
         defaulter.Apply(customer);
@@ -15,36 +17,22 @@ public class ComplexDefaultForTests
         Assert.Equal("Default Street", customer.Address3.Street);
     }
 }
-public class Address4Defaulter : AbstractDefaulter<Address4>
+internal sealed class ComplexAddressDefaulter : AbstractDefaulter<Address>
 {
-    public Address4Defaulter()
+    internal ComplexAddressDefaulter()
     {
         DefaultFor(x => x.Street, "Default Street");
         DefaultFor(x => x.City, "Default City");
     }
 }
 
-public class ComplexCustomerDefaulter : AbstractDefaulter<ComplexCustomer>
+internal sealed class ComplexCustomerDefaulter : AbstractDefaulter<Customer>
 {
-    public ComplexCustomerDefaulter()
+    internal ComplexCustomerDefaulter()
     {
-        DefaultFor(x => x.Address1).SetDefaulter(new Address4Defaulter());
-        DefaultFor(x => x.Address2).SetDefaulter(new Address4Defaulter());
-        DefaultFor(x => x.Address3, () => new Address4());
-        DefaultFor(x => x.Address3).SetDefaulter(new Address4Defaulter());
+        DefaultFor(x => x.Address1).SetDefaulter(new ComplexAddressDefaulter());
+        DefaultFor(x => x.Address2).SetDefaulter(new ComplexAddressDefaulter());
+        DefaultFor(x => x.Address3, () => new Address());
+        DefaultFor(x => x.Address3).SetDefaulter(new ComplexAddressDefaulter());
     }
 }
-
-public class ComplexCustomer
-{
-    public Address4? Address1 { get; set; } = new Address4();
-    public Address4? Address2 { get; set; }
-    public Address4? Address3 { get; set; }
-}
-
-public class Address4
-{
-    public string? Street { get; set; }
-    public string? City { get; set; }
-}
-

@@ -1,4 +1,6 @@
-﻿namespace FluentDefaults.Tests;
+﻿using FluentDefaults.Tests.Model;
+
+namespace FluentDefaults.Tests;
 
 public class SimpleDefaultForTests
 {
@@ -21,7 +23,7 @@ public class SimpleDefaultForTests
 
         defaulter.Apply(customer);
 
-        Assert.Equal(2, customer.Number2);
+        Assert.Equal(2, customer.NullableNumber2);
     }
 
     [Fact]
@@ -43,13 +45,13 @@ public class SimpleDefaultForTests
     {
         var customer = new Customer
         {
-            Number2 = 4
+            NullableNumber2 = 4
         };
         var defaulter = new CustomerDefaulter();
 
         defaulter.Apply(customer);
 
-        Assert.Equal(4, customer.Number2);
+        Assert.Equal(4, customer.NullableNumber2);
     }
 
     [Fact]
@@ -57,13 +59,13 @@ public class SimpleDefaultForTests
     {
         var customer = new Customer
         {
-            Number2 = 0
+            NullableNumber2 = 0
         };
         var defaulter = new CustomerDefaulter();
 
         defaulter.Apply(customer);
 
-        Assert.Equal(0, customer.Number2);
+        Assert.Equal(0, customer.NullableNumber2);
     }
 
     [Fact]
@@ -74,24 +76,16 @@ public class SimpleDefaultForTests
 
         defaulter.Apply(customer);
 
-        Assert.Equal(3, customer.Number3);
+        Assert.Equal(3, customer.FieldNumber3);
     }
 }
 
-public class Customer
+internal sealed class CustomerDefaulter : AbstractDefaulter<Customer>
 {
-    public int Number1 { get; set; }
-    public int? Number2 { get; set; }
-
-    public int Number3;
-}
-
-public class CustomerDefaulter : AbstractDefaulter<Customer>
-{
-    public CustomerDefaulter()
+    internal CustomerDefaulter()
     {
-        DefaultFor(x => x.Number1, 1); // Default Number1 to 1
-        DefaultFor(x => x.Number2, 2); // Default Number2 to null if not set
-        DefaultFor(x => x.Number3, 3);
+        DefaultFor(x => x.Number1, 1); // Default Number5 to 1
+        DefaultFor(x => x.NullableNumber2, 2); // Default NullableNumber2 to null if not set
+        DefaultFor(x => x.FieldNumber3, 3);
     }
 }
