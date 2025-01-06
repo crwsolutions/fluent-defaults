@@ -35,7 +35,7 @@ The `FluentDefaults` library allows you to define default values for properties 
 
 To install the `FluentDefaults` library, you can use the NuGet package manager:
 
-```bash
+```console
 dotnet add package FluentDefaults
 ```
 

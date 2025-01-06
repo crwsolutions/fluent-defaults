@@ -38,3 +38,7 @@ nav ul {
             nav ul li a:hover {
                 text-decoration: underline;
             }
+
+.highlight pre {
+    padding: 12px;
+}
