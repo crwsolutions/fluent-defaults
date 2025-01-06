@@ -62,7 +62,5 @@ public class PersonService
 You can register the defaulter as `Scoped`, `Singleton` or `Transient`. If you aren't familiar with the difference between Singleton, Scoped and Transient [please review the Microsoft dependency injection documentation](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#service-lifetimes)
 
 
-```eval_rst
-.. warning::
-   If you register a defaulter as Singleton, you should ensure that you don't inject anything that's transient or request-scoped into the defaulter. We typically don't recommend registering defaulters as Singleton unless you are experienced with using Dependency Injection and know how to troubleshoot issues related to singleton-scoped objects having on non-singleton dependencies. Registering defaulters as Transient is the simplest and safest option.
-```
+> **Warning:**
+> If you register a defaulter as Singleton, you should ensure that you don't inject anything that's transient or request-scoped into the defaulter. We typically don't recommend registering defaulters as Singleton unless you are experienced with using Dependency Injection and know how to troubleshoot issues related to singleton-scoped objects having on non-singleton dependencies. Registering defaulters as Transient is the simplest and safest option.

@@ -3,11 +3,15 @@ layout: default
 title: "Collections"
 ---
 
-## Async Defaulters
+# Async Defaulters
 
-The `FluentDefaults` library supports default values for collections using the `ForEach` method.
+The `FluentDefaults` library supports default values for collections using the `ForEach` method to apply the same rule to multiple items in a collection.
 
-### Example
+## ForEach().DefaultFor().Is()
+
+The `ForEach` method is used to iterate over each item in a specified collection property of an object. It allows you to apply rules or actions to each item within the collection. The `DefaultFor` method is used to specify a property of the items within the collection that you want to set a default value for. The `Is` method is used to assign the default value to the specified property. It is called after `DefaultFor` to set the value that should be used if the property is not already set. You can pass a fixed value or a function (eg `() => Guid.NewGuid()`)
+
+### Example with fixed value
 
 ```csharp
 internal sealed class CollectionCustomerWithDefaultForDefaulter : AbstractDefaulter<CollectionCustomer>
@@ -31,7 +35,7 @@ public class CollectionAddress
 }
 ```
 
-## SetDefaulter()
+## ForEach().SetDefaulter()
 
 It is also possible to set a defaulter for each item in a collection using the `SetDefaulter` method.
 

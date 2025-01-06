@@ -7,13 +7,13 @@ sidebar:
   nav:
     - title: "Home"
       url: "/fluent-defaults"
-    - title: "Dependency Injection"
-      url: "di"
     - title: "Complex properties"
       url: "complex"
     - title: "Collections"
       url: "collection"
-    - title: "Async"
+    - title: "Dependency Injection"
+      url: "di"
+    - title: "Asynchronous defaults"
       url: "async"
 
 # Breadcrumb

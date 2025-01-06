@@ -3,9 +3,13 @@ layout: default
 title: "Complex properties"
 ---
 
-## Complex Properties
+# Complex Properties
 
 The `FluentDefaults` library also supports defining default values for complex properties and collections.
+
+## DefaultFor().SetDefaulter()
+
+The `DefaultFor().SetDefaulter()` method allows you to set a defaulter for a complex property within an object. This is useful when you need to apply default values to nested properties or objects within a parent object.
 
 ### Example
 
