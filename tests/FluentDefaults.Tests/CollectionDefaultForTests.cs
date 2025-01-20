@@ -52,6 +52,6 @@ internal sealed class CollectionCustomerWithDefaultForDefaulter : AbstractDefaul
     internal CollectionCustomerWithDefaultForDefaulter()
     {
         ForEach(x => x.Addresses2).DefaultFor(x => x.City, "- unknown city -");
-        ForEach(x => x.Addresses2).DefaultFor(x => x.Street).Is("- unknown street -");
+        ForEach(x => x.Addresses2).DefaultFor(x => x.Street).Is(() => "- unknown street -");
     }
 }
