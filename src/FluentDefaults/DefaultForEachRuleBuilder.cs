@@ -90,6 +90,29 @@ public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TPrope
         return this;
     }
 
+    /// <summary>
+    /// Specifies a factory function that receives the element that produces the default value for the property or field.
+    /// </summary>
+    /// <param name="defaultFunction">A function that produces the default value.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    public DefaultForEachRuleBuilder<T, TProperty> Is<TElementProperty>(Func<T, TElementProperty> defaultFunction)
+    {
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultFunction);
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies a factory function that receives the parent instance that produces the default value for the property or field.
+    /// </summary>
+    /// <param name="defaultFunction">A function that produces the default value.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+
+    public DefaultForEachRuleBuilder<T, TProperty> Is<TElementProperty>(Func<TProperty, TElementProperty> defaultFunction)
+    {
+        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultFunction);
+        return this;
+    }
+
     ///// <summary>
     ///// Specifies a condition that must be met for the default value to be applied.
     ///// </summary>

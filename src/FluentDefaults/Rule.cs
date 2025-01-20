@@ -147,12 +147,6 @@ internal class Rule<T>
 
     internal void SetCollectionAction<TProperty, TElementProperty>(object? defaultValueOrFactory)
     {
-        var defaultValue = defaultValueOrFactory is Func<TElementProperty> factory
-            ? factory()
-            : defaultValueOrFactory is null
-                ? default
-                : (TElementProperty)defaultValueOrFactory;
-
         if (MemberExpression?.Member is PropertyInfo propertyInfo)
         {
             var getMethod = propertyInfo.GetGetMethod();
@@ -166,18 +160,25 @@ internal class Rule<T>
                 {
                     Action = instance =>
                     {
-                        var currentValue = (IEnumerable<TProperty>?)getMethod.Invoke(instance, null);
-                        if (!Equals(currentValue, default(TProperty)))
+                        var list = (IEnumerable<TProperty>?)getMethod.Invoke(instance, null);
+                        if (!Equals(list, default(TProperty)))
                         {
+                            var getMethod = propertyInfo.GetGetMethod();
+                            foreach (var element in list!)
                             {
-                                var getMethod = propertyInfo.GetGetMethod();
-                                foreach (var element in currentValue!)
+                                var childValue = (TElementProperty?)childGetMethod.Invoke(element, null);
+                                if (Equals(childValue, default(TElementProperty)))
                                 {
-                                    var childValue = (TElementProperty?)childGetMethod.Invoke(element, null);
-                                    if (Equals(childValue, default(TElementProperty)))
+                                    var defaultValue = defaultValueOrFactory switch
                                     {
-                                        childSetMethod.Invoke(element, [defaultValue]);
-                                    }
+                                        Func<TElementProperty> factory => factory(),
+                                        Func<T, TElementProperty> factory => factory(instance),
+                                        Func<TProperty, TElementProperty> factory => factory(element),
+                                        null => default,
+                                        _ => (TElementProperty)defaultValueOrFactory
+                                    };
+
+                                    childSetMethod.Invoke(element, [defaultValue]);
                                 }
                             }
                         }
