@@ -91,12 +91,6 @@ internal class Rule<T>
         object? defaultValueOrFactory
     )
     {
-        var defaultValue = defaultValueOrFactory is Func<TProperty> factory
-            ? factory()
-            : defaultValueOrFactory is null
-                ? default
-                : (TProperty)defaultValueOrFactory;
-
         if (MemberExpression.Member is PropertyInfo propertyInfo)
         {
             var getMethod = propertyInfo.GetGetMethod();
@@ -109,6 +103,14 @@ internal class Rule<T>
                     var currentValue = (TProperty?)getMethod.Invoke(instance, null);
                     if (Equals(currentValue, default(TProperty)))
                     {
+                        var defaultValue = defaultValueOrFactory switch
+                        {
+                            Func<TProperty> factory => factory(),
+                            Func<T, TProperty> factory => factory(instance),
+                            null => default,
+                            _ => (TProperty)defaultValueOrFactory
+                        };
+
                         setMethod.Invoke(instance, [defaultValue]);
                     }
                 };
@@ -125,6 +127,14 @@ internal class Rule<T>
                 var currentValue = (TProperty?)fieldInfo.GetValue(instance);
                 if (Equals(currentValue, default(TProperty)))
                 {
+                    var defaultValue = defaultValueOrFactory switch
+                    {
+                        Func<TProperty> factory => factory(),
+                        Func<T, TProperty> factory => factory(instance),
+                        null => default,
+                        _ => (TProperty)defaultValueOrFactory
+                    };
+
                     fieldInfo.SetValue(instance, defaultValue);
                 }
             };

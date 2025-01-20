@@ -46,6 +46,17 @@ public abstract class BaseRuleBuilder<T, TProperty>
     }
 
     /// <summary>
+    /// Specifies a factory function that receives the instance and that produces the default value for the property or field.
+    /// </summary>
+    /// <param name="defaultFunction">A function that receives the instance and that produces the default value.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    public BaseRuleBuilder<T, TProperty> Is(Func<T, TProperty> defaultFunction) 
+    { 
+        _rule.SetAction<TProperty>(defaultFunction);
+        return this;
+    }
+
+    /// <summary>
     /// Specifies an asynchronous factory function that produces the default value for the property or field.
     /// </summary>
     /// <param name="defaultAsyncFunction">A function that produces the default value asynchronously.</param>
