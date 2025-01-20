@@ -15,9 +15,12 @@ public class PersonDefaulter : AbstractDefaulter<Person>
     {
         DefaultFor(x => x.Id).Is(() => Guid.NewGuid());
         DefaultFor(x => x.IsVip).Is(false);
+        DefaultFor(x => x.Label).Is(SetLabel);
         DefaultFor(x => x.Discount).Is(20m).When(x => x.IsVip == true);
         DefaultFor(x => x.Discount).Is(10m).When(x => x.IsVip == false);
     }
+
+    private int SetLabel(Person p) => p.IsVip ? "Confidential" : "";
 }
 ```
 

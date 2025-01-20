@@ -7,7 +7,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<PackageId>FluentDefaults</PackageId>
-		<VersionSuffix Condition="'$(VersionSuffix)' == ''">0-rc.2</VersionSuffix>
+		<VersionSuffix Condition="'$(VersionSuffix)' == ''">0-rc.3</VersionSuffix>
 		<Version>1.0.$(VersionSuffix)</Version>
 		<Authors>Colin Wilmans</Authors>
 		<PackageDescription>A library for .NET that uses a fluent interface for setting default values, similar to how FluentValidation handles validations.</PackageDescription>
@@ -22,7 +22,7 @@
 		<Description>A library for .NET that uses a fluent interface for setting defaults</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Title>Fluent Defaults</Title>
-		<PackageReleaseNotes>Improve ForEach</PackageReleaseNotes>
+		<PackageReleaseNotes>Defaulting with a function that receives a reference to the instance</PackageReleaseNotes>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 

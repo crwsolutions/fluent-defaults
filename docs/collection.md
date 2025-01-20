@@ -16,11 +16,20 @@ The `ForEach` method is used to iterate over each item in a specified collection
 ```csharp
 internal sealed class CollectionCustomerWithDefaultForDefaulter : AbstractDefaulter<CollectionCustomer>
 {
+    int _number = 0;
+
     internal CollectionCustomerWithDefaultForDefaulter()
     {
-        ForEach(x => x.Addresses).DefaultFor(x => x.Street).Is("- unknown street -"); //Or:
         ForEach(x => x.Addresses).DefaultFor(x => x.City, "- unknown city -");
+        ForEach(x => x.Addresses).DefaultFor(x => x.Street).Is("- unknown street -");
+        ForEach(x => x.Addresses2).DefaultFor(x => x.Id).Is(GetNumber);
+        ForEach(x => x.Addresses1).DefaultFor(x => x.Street).Is((Customer x) => GetSome(x));
+        ForEach(x => x.Addresses1).DefaultFor(x => x.City).Is((Address x) => GetSome(x));
     }
+
+    private string GetSome(Customer x) => $"{x.Number5} street";
+    private string GetSome(Address x) => $"City in {x.Region}";
+    private int GetNumber() => ++_number;
 }
 
 public class CollectionCustomer
