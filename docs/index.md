@@ -62,9 +62,9 @@ public class CustomerDefaulter : AbstractDefaulter<Customer>
 { 
    public CustomerDefaulter()
    { 
-       DefaultFor(x => x.Number1, 1); // Default Number1 to 1 
-       DefaultFor(x => x.Number2, 2); // Default Number2 to 2 if not set 
-       DefaultFor(x => x.Number3, 3); // Default Number3 to 3 
+       DefaultFor(x => x.Number1).Is(1); // Default Number1 to 1 
+       DefaultFor(x => x.Number2).Is(2); // Default Number2 to 2 if not set 
+       DefaultFor(x => x.Number3).Is(3); // Default Number3 to 3 
    }
 }
 ```

@@ -20,7 +20,7 @@ internal sealed class ComplexAddressDefaulter : AbstractDefaulter<Address>
 {
     internal ComplexAddressDefaulter()
     {
-        DefaultFor(x => x.Street, "- unknown street -");
+        DefaultFor(x => x.Street).Is("- unknown street -");
     }
 }
 

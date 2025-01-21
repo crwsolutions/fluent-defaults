@@ -42,23 +42,6 @@ public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TPrope
     /// Defines a default value for a specified property or field of each element in the collection.
     /// </summary>
     /// <param name="expression">An expression that specifies the property or field.</param>
-    /// <param name="defaultValue">The default value to be set.</param>
-    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
-    public BaseRuleBuilder<T, TProperty> DefaultFor<TElementProperty>(
-        Expression<Func<TProperty, TElementProperty>> expression,
-        TElementProperty defaultValue
-    )
-    {
-        _rule.ChildMemberExpression = (MemberExpression)expression.Body;
-        _rule.SetCollectionAction<TProperty, TElementProperty>(defaultValue);
-
-        return this;
-    }
-
-    /// <summary>
-    /// Defines a default value for a specified property or field of each element in the collection.
-    /// </summary>
-    /// <param name="expression">An expression that specifies the property or field.</param>
     /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
     public DefaultForEachRuleBuilder<T, TProperty> DefaultFor<TElementProperty>(
         Expression<Func<TProperty, TElementProperty>> expression
@@ -112,15 +95,4 @@ public class DefaultForEachRuleBuilder<T, TProperty> : BaseRuleBuilder<T, TPrope
         _rule.SetCollectionAction<TProperty, TElementProperty>(defaultFunction);
         return this;
     }
-
-    ///// <summary>
-    ///// Specifies a condition that must be met for the default value to be applied.
-    ///// </summary>
-    ///// <param name="condition">A function that defines the condition.</param>
-    ///// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
-    //public DefaultForEachRuleBuilder<T, TProperty> When(Func<TElementProperty, bool> condition)
-    //{
-    //    _rule.SetCondition(condition);
-    //    return this;
-    //}
 }

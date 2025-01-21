@@ -20,6 +20,6 @@ internal sealed class FunctionCustomerDefaulter : AbstractDefaulter<Customer>
 {
     internal FunctionCustomerDefaulter()
     {
-        DefaultFor(x => x.Number4, () => 4);
+        DefaultFor(x => x.Number4).Is(() => 4);
     }
 }

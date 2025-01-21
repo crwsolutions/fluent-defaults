@@ -21,8 +21,8 @@ internal sealed class ComplexAddressDefaulter : AbstractDefaulter<Address>
 {
     internal ComplexAddressDefaulter()
     {
-        DefaultFor(x => x.Street, "Default Street");
-        DefaultFor(x => x.City, "Default City");
+        DefaultFor(x => x.Street).Is("Default Street");
+        DefaultFor(x => x.City).Is("Default City");
     }
 }
 
@@ -32,7 +32,7 @@ internal sealed class ComplexCustomerDefaulter : AbstractDefaulter<Customer>
     {
         DefaultFor(x => x.Address1).SetDefaulter(new ComplexAddressDefaulter());
         DefaultFor(x => x.Address2).SetDefaulter(new ComplexAddressDefaulter());
-        DefaultFor(x => x.Address3, () => new Address());
+        DefaultFor(x => x.Address3).Is(() => new Address());
         DefaultFor(x => x.Address3).SetDefaulter(new ComplexAddressDefaulter());
     }
 }

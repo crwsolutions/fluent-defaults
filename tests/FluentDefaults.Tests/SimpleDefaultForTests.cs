@@ -84,8 +84,8 @@ internal sealed class CustomerDefaulter : AbstractDefaulter<Customer>
 {
     internal CustomerDefaulter()
     {
-        DefaultFor(x => x.Number1, 1); // Default Number5 to 1
-        DefaultFor(x => x.NullableNumber2, 2); // Default NullableNumber2 to null if not set
-        DefaultFor(x => x.FieldNumber3, 3);
+        DefaultFor(x => x.Number1).Is(1); // Default Number5 to 1
+        DefaultFor(x => x.NullableNumber2).Is(2); // Default NullableNumber2 to null if not set
+        DefaultFor(x => x.FieldNumber3).Is(3);
     }
 }

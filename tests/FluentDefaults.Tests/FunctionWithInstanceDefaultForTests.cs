@@ -26,7 +26,7 @@ internal sealed class FunctionWithInstanceCustomerDefaulter : AbstractDefaulter<
     internal FunctionWithInstanceCustomerDefaulter()
     {
         DefaultFor(x => x.Number4).Is(x => x.Number1);
-        DefaultFor(x => x.FieldNumber3, (x) => x.Number1);
+        DefaultFor(x => x.FieldNumber3).Is((x) => x.Number1);
         DefaultFor(x => x.NullableNumber2).Is(x => Calculate(x.Number1));
     }
 

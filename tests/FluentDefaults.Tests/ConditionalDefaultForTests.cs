@@ -31,8 +31,8 @@ internal sealed class ConditionalCustomerDefaulter : AbstractDefaulter<Customer>
 {
     internal  ConditionalCustomerDefaulter()
     {
-        DefaultFor(x => x.FieldNumber3, 3).When(x => x.Number5 != 5);
-        DefaultFor(x => x.Number4, () => 4).When(x => x.Number5 == 5);
+        DefaultFor(x => x.FieldNumber3).Is(3).When(x => x.Number5 != 5);
+        DefaultFor(x => x.Number4).Is(() => 4).When(x => x.Number5 == 5);
     }
 }
 

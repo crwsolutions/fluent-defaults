@@ -1,9 +1,4 @@
 ﻿using BenchmarkDotNet.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FluentDefaults.Tests.Benchmark;
 
@@ -52,7 +47,6 @@ public class SingletonBenchmark
         }
 
         return true;
-
     }
 }
 
@@ -68,8 +62,8 @@ public sealed class CustomerDefaulter : AbstractDefaulter<Customer>
 {
     public CustomerDefaulter()
     {
-        DefaultFor(x => x.Number1, 1); // Default Number1 to 1
-        DefaultFor(x => x.Number2, 2); // Default Number2 to null if not set
-        DefaultFor(x => x.Number3, 3);
+        DefaultFor(x => x.Number1).Is(1); // Default Number1 to 1
+        DefaultFor(x => x.Number2).Is(2); // Default Number2 to null if not set
+        DefaultFor(x => x.Number3).Is(3);
     }
 }

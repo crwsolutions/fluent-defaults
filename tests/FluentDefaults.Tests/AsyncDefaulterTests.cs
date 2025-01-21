@@ -30,7 +30,7 @@ internal sealed class AsyncCustomerDefaulter : AbstractAsyncDefaulter<Customer>
 {
     internal AsyncCustomerDefaulter()
     {
-        DefaultFor(x => x.Number1, 12);
+        DefaultFor(x => x.Number1).Is(12);
         DefaultFor(x => x.NullableNumber2)
             .IsAsync(async () =>
             {

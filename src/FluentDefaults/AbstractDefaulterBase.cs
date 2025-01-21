@@ -13,57 +13,6 @@ public abstract class AbstractDefaulterBase<T>
     /// Defines a default value for a specified property or field.
     /// </summary>
     /// <param name="expression">An expression that specifies the property or field.</param>
-    /// <param name="defaultValue">The default value to be set.</param>
-    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
-    public RuleBuilder<T, TProperty> DefaultFor<TProperty>(
-        Expression<Func<T, TProperty>> expression,
-        TProperty defaultValue
-    )
-    {
-        var rule = new Rule<T>((MemberExpression)expression.Body);
-        rule.SetAction<TProperty>(defaultValue);
-        _rules.Add(rule);
-        return new RuleBuilder<T, TProperty>(rule);
-    }
-
-    /// <summary>
-    /// Defines a default value for a specified property or field using a factory function.
-    /// </summary>
-    /// <param name="expression">An expression that specifies the property or field.</param>
-    /// <param name="defaultFactory">A function that produces the default value.</param>
-    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
-    public RuleBuilder<T, TProperty> DefaultFor<TProperty>(
-        Expression<Func<T, TProperty>> expression,
-        Func<TProperty> defaultFactory
-    )
-    {
-        var rule = new Rule<T>((MemberExpression)expression.Body);
-        rule.SetAction<TProperty>(defaultFactory);
-        _rules.Add(rule);
-        return new RuleBuilder<T, TProperty>(rule);
-    }
-
-    /// <summary>
-    /// Defines a default value for a specified property or field using a factory function with instance as parameter.
-    /// </summary>
-    /// <param name="expression">An expression that specifies the property or field.</param>
-    /// <param name="defaultFactory">A function which uses the instance as paramter that produces the default value.</param>
-    /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
-    public RuleBuilder<T, TProperty> DefaultFor<TProperty>(
-        Expression<Func<T, TProperty>> expression,
-        Func<T, TProperty> defaultFactory
-    )
-    {
-        var rule = new Rule<T>((MemberExpression)expression.Body);
-        rule.SetAction<TProperty>(defaultFactory);
-        _rules.Add(rule);
-        return new RuleBuilder<T, TProperty>(rule);
-    }
-
-    /// <summary>
-    /// Defines a default value for a specified property or field.
-    /// </summary>
-    /// <param name="expression">An expression that specifies the property or field.</param>
     /// <returns>A <see cref="RuleBuilder{T, TProperty}"/> for further configuration.</returns>
     public RuleBuilder<T, TProperty> DefaultFor<TProperty>(
         Expression<Func<T, TProperty>> expression
@@ -88,5 +37,3 @@ public abstract class AbstractDefaulterBase<T>
         return new DefaultForEachRuleBuilder<T, TProperty>(rule);
     }
 }
-
-
