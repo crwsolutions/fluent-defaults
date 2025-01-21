@@ -15,6 +15,8 @@ public class ComplexDefaultForTests
         Assert.Equal("Default Street", customer.Address1.Street);
         Assert.Null(customer.Address2);
         Assert.Equal("Default Street", customer.Address3.Street);
+        Assert.Equal("Default Street", customer.OptionalAddress1!.Street);
+        Assert.Null(customer.OptionalAddress2);
     }
 }
 internal sealed class ComplexAddressDefaulter : AbstractDefaulter<Address>
@@ -34,5 +36,8 @@ internal sealed class ComplexCustomerDefaulter : AbstractDefaulter<Customer>
         DefaultFor(x => x.Address2).SetDefaulter(new ComplexAddressDefaulter());
         DefaultFor(x => x.Address3).Is(() => new Address());
         DefaultFor(x => x.Address3).SetDefaulter(new ComplexAddressDefaulter());
+        DefaultFor(x => x.OptionalAddress1).Is(new Address());
+        DefaultFor(x => x.OptionalAddress1!).SetDefaulter(new ComplexAddressDefaulter());
+        DefaultFor(x => x.OptionalAddress2!).SetDefaulter(new ComplexAddressDefaulter());
     }
 }
