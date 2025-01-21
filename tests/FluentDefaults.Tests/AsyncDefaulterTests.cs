@@ -38,9 +38,9 @@ internal sealed class AsyncCustomerDefaulter : AbstractAsyncDefaulter<Customer>
                 return 42;
             });
         DefaultFor(x => x.FieldNumber3)
-            .IsAsync(async () =>
+            .IsAsync(async (x) => 
             {
-                await Task.Delay(250); // Simulates work
+                await Task.Delay(x.Number5 * 50); // Simulates work
                 return 24;
             });
     }

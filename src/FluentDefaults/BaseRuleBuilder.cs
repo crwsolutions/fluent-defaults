@@ -63,7 +63,18 @@ public abstract class BaseRuleBuilder<T, TProperty>
     /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
     public BaseRuleBuilder<T, TProperty> IsAsync(Func<Task<TProperty>> defaultAsyncFunction)
     {
-        _rule.SetAsyncAction(defaultAsyncFunction);
+        _rule.SetAsyncAction<TProperty>(defaultAsyncFunction);
+        return this;
+    }
+
+    /// <summary>
+    /// Specifies an asynchronous factory function that receives a reference to the instance that produces the default value for the property or field.
+    /// </summary>
+    /// <param name="defaultAsyncFunction">A function that produces the default value asynchronously.</param>
+    /// <returns>The current <see cref="BaseRuleBuilder{T, TProperty}"/> instance.</returns>
+    public BaseRuleBuilder<T, TProperty> IsAsync(Func<T, Task<TProperty>> defaultAsyncFunction)
+    {
+        _rule.SetAsyncAction<TProperty>(defaultAsyncFunction);
         return this;
     }
 }

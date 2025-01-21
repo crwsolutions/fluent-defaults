@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace FluentDefaults;
@@ -42,7 +43,7 @@ internal class Rule<T>
     }
 
     internal void SetAsyncAction<TProperty>(
-        Func<Task<TProperty>> defaultValue
+        Delegate defaultFactory
     )
     {
         if (MemberExpression.Member is PropertyInfo propertyInfo)
@@ -57,8 +58,13 @@ internal class Rule<T>
                     var currentValue = (TProperty?)getMethod.Invoke(instance, null);
                     if (Equals(currentValue, default(TProperty)))
                     {
-                        var v = await defaultValue();
-                        setMethod.Invoke(instance, [v]);
+                        var defaultValue = defaultFactory switch
+                        {
+                            Func<Task<TProperty>> factory => await factory(),
+                            Func<T, Task<TProperty>> factory => await factory(instance),
+                            _ => default
+                        };
+                        setMethod.Invoke(instance, [defaultValue]);
                     }
                     await Task.CompletedTask;
                 };
@@ -75,8 +81,13 @@ internal class Rule<T>
                 var currentValue = (TProperty?)fieldInfo.GetValue(instance);
                 if (Equals(currentValue, default(TProperty)))
                 {
-                    var v = await defaultValue();
-                    fieldInfo.SetValue(instance, v);
+                    var defaultValue = defaultFactory switch
+                    {
+                        Func<Task<TProperty>> factory => await factory(),
+                        Func<T, Task<TProperty>> factory => await factory(instance),
+                        _ => default
+                    };
+                    fieldInfo.SetValue(instance, defaultValue);
                 }
                 await Task.CompletedTask;
             };
