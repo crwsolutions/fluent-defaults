@@ -5,7 +5,7 @@
 /// </summary>
 public sealed class DefaultForEachIsRuleBuilder<T, TProperty>
 {
-    internal readonly Rule<T> _rule;
+    private readonly Rule<T> _rule;
 
     internal DefaultForEachIsRuleBuilder(Rule<T> rule)
     {

@@ -5,7 +5,7 @@
 /// </summary>
 public sealed class WhenRuleBuilder<T>
 {
-    internal readonly Rule<T> _rule;
+    private readonly Rule<T> _rule;
 
     internal WhenRuleBuilder(Rule<T> rule)
     {

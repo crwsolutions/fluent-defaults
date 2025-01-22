@@ -7,7 +7,7 @@ namespace FluentDefaults;
 /// </summary>
 public sealed class RuleBuilder<T, TProperty> 
 {
-    internal readonly Rule<T> _rule;
+    private readonly Rule<T> _rule;
 
     internal RuleBuilder(Rule<T> rule) 
     {
