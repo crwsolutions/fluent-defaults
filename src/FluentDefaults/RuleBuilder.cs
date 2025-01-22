@@ -1,15 +1,13 @@
-﻿using System.Reflection;
-
-namespace FluentDefaults;
+﻿namespace FluentDefaults;
 
 /// <summary>
 /// Provides a builder for defining rules that apply default values to properties or fields.
 /// </summary>
-public sealed class RuleBuilder<T, TProperty> 
+public sealed class RuleBuilder<T, TProperty>
 {
     private readonly Rule<T> _rule;
 
-    internal RuleBuilder(Rule<T> rule) 
+    internal RuleBuilder(Rule<T> rule)
     {
         _rule = rule;
     }
@@ -74,7 +72,7 @@ public sealed class RuleBuilder<T, TProperty>
     /// </summary>
     /// <param name="defaulter">The defaulter to apply to the property or field.</param>
     /// <exception cref="Exception">Thrown if the property or field does not have a get method or if the member is not found.</exception>
-    public void SetDefaulter(AbstractDefaulter<TProperty> defaulter) => 
+    public void SetDefaulter(AbstractDefaulter<TProperty> defaulter) =>
         SetDefaulterImpl(defaulter: defaulter);
 
     /// <summary>
@@ -87,42 +85,14 @@ public sealed class RuleBuilder<T, TProperty>
 
     private void SetDefaulterImpl(Func<T, AbstractDefaulter<TProperty>>? defaulterFactory = null, AbstractDefaulter<TProperty>? defaulter = null)
     {
-        if (_rule.MemberExpression?.Member is PropertyInfo propertyInfo)
+        _rule.Action = instance =>
         {
-            var getMethod = propertyInfo.GetGetMethod();
-
-            if (getMethod != null)
+            var currentValue = _rule.GetMemberValue<TProperty>(instance);
+            if (!Equals(currentValue, default(TProperty)))
             {
-                _rule.Action = instance =>
-                {
-                    var currentValue = (TProperty?)getMethod.Invoke(instance, null);
-                    if (!Equals(currentValue, default(TProperty)))
-                    {
-                        var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter; ;
-                        defaulterInstance?.Apply(currentValue!);
-                    }
-                };
+                var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter; ;
+                defaulterInstance?.Apply(currentValue!);
             }
-            else
-            {
-                throw new Exception("Property has no set and get method");
-            }
-        }
-        else if (_rule.MemberExpression?.Member is FieldInfo fieldInfo)
-        {
-            _rule.Action = instance =>
-            {
-                var currentValue = (TProperty?)fieldInfo.GetValue(instance);
-                if (!Equals(currentValue, default(TProperty)))
-                {
-                    var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter;
-                    defaulterInstance?.Apply(currentValue!);
-                }
-            };
-        }
-        else
-        {
-            throw new Exception("Member not found");
-        }
+        };
     }
 }

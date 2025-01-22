@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 
 namespace FluentDefaults;
 
@@ -21,26 +20,17 @@ public sealed class DefaultForEachRuleBuilder<T, TProperty>
     /// <param name="defaulter">The defaulter to apply to each element in the collection.</param>
     public void SetDefaulter(AbstractDefaulter<TProperty> defaulter)
     {
-        if (_rule.MemberExpression?.Member is PropertyInfo propertyInfo)
+        _rule.Action = instance =>
         {
-            var getMethod = propertyInfo.GetGetMethod();
-
-            if (getMethod != null)
+            var currentValue = _rule.GetCollectionValue<TProperty>(instance);
+            if (!Equals(currentValue, default(TProperty)))
             {
-                _rule.Action = instance =>
+                foreach (var element in currentValue!)
                 {
-                    var currentValue = (IEnumerable<TProperty>?)
-                        getMethod.Invoke(instance, null);
-                    if (!Equals(currentValue, default(TProperty)))
-                    {
-                        foreach (var element in currentValue!)
-                        {
-                            defaulter.Apply(element);
-                        }
-                    }
-                };
+                    defaulter.Apply(element);
+                }
             }
-        }
+        };
     }
 
     /// <summary>

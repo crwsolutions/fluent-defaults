@@ -11,7 +11,48 @@ internal sealed class Rule<T>
 
     internal Func<T, bool>? Condition { get; private set; }
 
-    internal MemberExpression MemberExpression { get; set; }
+    internal MemberExpression MemberExpression { private get; set; }
+
+    internal IEnumerable<TProperty>? GetCollectionValue<TProperty>(T instance)
+    {
+        return (IEnumerable<TProperty>?)(MemberExpression?.Member as PropertyInfo)?.GetGetMethod()?.Invoke(instance, null);
+    }
+
+    private TElementProperty? GetChildValue<TProperty, TElementProperty>(TProperty element)
+    {
+        return (TElementProperty?)(ChildMemberExpression!.Member as PropertyInfo)?.GetGetMethod()?.Invoke(element, null);
+    }
+
+    private void SetChildValue<TProperty, TElementProperty>(TProperty element, TElementProperty? defaultValue)
+    {
+        (ChildMemberExpression!.Member as PropertyInfo)?.GetSetMethod()?.Invoke(element, [defaultValue]);
+    }
+
+    internal TProperty? GetMemberValue<TProperty>(T instance)
+    {
+        return MemberExpression.Member switch
+        {
+            PropertyInfo propertyInfo => (TProperty?)propertyInfo.GetGetMethod()?.Invoke(instance, null),
+            FieldInfo fieldInfo => (TProperty?)fieldInfo.GetValue(instance),
+            _ => throw new Exception("Unsupported member type")
+        };
+    }
+
+    private void SetMemberValue<TProperty>(T instance, TProperty? defaultValue)
+    {
+        if (MemberExpression.Member is PropertyInfo propertyInfo)
+        {
+            propertyInfo.GetSetMethod()?.Invoke(instance, [defaultValue]);
+        }
+        else if (MemberExpression.Member is FieldInfo fieldInfo)
+        {
+            fieldInfo.SetValue(instance, defaultValue);
+        }
+        else
+        {
+            throw new Exception("Member is not a Property or Field");
+        }
+    }
 
     internal MemberExpression? ChildMemberExpression { get; set; }
 
@@ -41,160 +82,70 @@ internal sealed class Rule<T>
         }
     }
 
-    internal void SetAsyncAction<TProperty>(
-        Delegate defaultFactory
-    )
+    internal void SetAsyncAction<TProperty>(Delegate defaultFactory)
     {
-        if (MemberExpression.Member is PropertyInfo propertyInfo)
+        ActionAsync = async instance =>
         {
-            var getMethod = propertyInfo.GetGetMethod();
-            var setMethod = propertyInfo.GetSetMethod();
-
-            if (getMethod != null && setMethod != null)
+            var currentValue = GetMemberValue<TProperty>(instance);
+            if (Equals(currentValue, default(TProperty)))
             {
-                ActionAsync = async instance =>
+                var defaultValue = defaultFactory switch
                 {
-                    var currentValue = (TProperty?)getMethod.Invoke(instance, null);
-                    if (Equals(currentValue, default(TProperty)))
-                    {
-                        var defaultValue = defaultFactory switch
-                        {
-                            Func<Task<TProperty>> factory => await factory(),
-                            Func<T, Task<TProperty>> factory => await factory(instance),
-                            _ => default
-                        };
-                        setMethod.Invoke(instance, [defaultValue]);
-                    }
-                    await Task.CompletedTask;
+                    Func<Task<TProperty>> factory => await factory(),
+                    Func<T, Task<TProperty>> factory => await factory(instance),
+                    _ => default
                 };
+                SetMemberValue(instance, defaultValue);
             }
-            else
-            {
-                throw new Exception("Property has no set and get method");
-            }
-        }
-        else if (MemberExpression.Member is FieldInfo fieldInfo)
-        {
-            ActionAsync = async instance =>
-            {
-                var currentValue = (TProperty?)fieldInfo.GetValue(instance);
-                if (Equals(currentValue, default(TProperty)))
-                {
-                    var defaultValue = defaultFactory switch
-                    {
-                        Func<Task<TProperty>> factory => await factory(),
-                        Func<T, Task<TProperty>> factory => await factory(instance),
-                        _ => default
-                    };
-                    fieldInfo.SetValue(instance, defaultValue);
-                }
-                await Task.CompletedTask;
-            };
-        }
-        else
-        {
-            throw new Exception("Member not found");
-        }
+            await Task.CompletedTask;
+        };
     }
 
-    internal void SetAction<TProperty>(
-        object? defaultValueOrFactory
-    )
+    internal void SetAction<TProperty>(object? defaultValueOrFactory)
     {
-        if (MemberExpression.Member is PropertyInfo propertyInfo)
+        Action = instance =>
         {
-            var getMethod = propertyInfo.GetGetMethod();
-            var setMethod = propertyInfo.GetSetMethod();
-
-            if (getMethod != null && setMethod != null)
+            var currentValue = GetMemberValue<TProperty>(instance);
+            if (Equals(currentValue, default(TProperty)))
             {
-                Action = instance =>
+                var defaultValue = defaultValueOrFactory switch
                 {
-                    var currentValue = (TProperty?)getMethod.Invoke(instance, null);
-                    if (Equals(currentValue, default(TProperty)))
-                    {
-                        var defaultValue = defaultValueOrFactory switch
-                        {
-                            Func<TProperty> factory => factory(),
-                            Func<T, TProperty> factory => factory(instance),
-                            null => default,
-                            _ => (TProperty)defaultValueOrFactory
-                        };
-
-                        setMethod.Invoke(instance, [defaultValue]);
-                    }
+                    Func<TProperty> factory => factory(),
+                    Func<T, TProperty> factory => factory(instance),
+                    null => default,
+                    _ => (TProperty)defaultValueOrFactory
                 };
-            }
-            else
-            {
-                throw new Exception("Property has no set and get method");
-            }
-        }
-        else if (MemberExpression.Member is FieldInfo fieldInfo)
-        {
-            Action = instance =>
-            {
-                var currentValue = (TProperty?)fieldInfo.GetValue(instance);
-                if (Equals(currentValue, default(TProperty)))
-                {
-                    var defaultValue = defaultValueOrFactory switch
-                    {
-                        Func<TProperty> factory => factory(),
-                        Func<T, TProperty> factory => factory(instance),
-                        null => default,
-                        _ => (TProperty)defaultValueOrFactory
-                    };
 
-                    fieldInfo.SetValue(instance, defaultValue);
-                }
-            };
-        }
-        else
-        {
-            throw new Exception("Member not found");
-        }
+                SetMemberValue(instance, defaultValue);
+            }
+        };
     }
 
     internal void SetCollectionAction<TProperty, TElementProperty>(object? defaultValueOrFactory)
     {
-        if (MemberExpression?.Member is PropertyInfo propertyInfo)
+        Action = instance =>
         {
-            var getMethod = propertyInfo.GetGetMethod();
-
-            if (ChildMemberExpression!.Member is PropertyInfo childPropertyInfo)
+            var collection = GetCollectionValue<TProperty>(instance);
+            if (!Equals(collection, default(TProperty)))
             {
-                var childGetMethod = childPropertyInfo.GetGetMethod();
-                var childSetMethod = childPropertyInfo.GetSetMethod();
-
-                if (getMethod != null && childGetMethod != null && childSetMethod != null)
+                foreach (var element in collection!)
                 {
-                    Action = instance =>
+                    var childValue = GetChildValue<TProperty, TElementProperty>(element);
+                    if (Equals(childValue, default(TElementProperty)))
                     {
-                        var list = (IEnumerable<TProperty>?)getMethod.Invoke(instance, null);
-                        if (!Equals(list, default(TProperty)))
+                        var defaultValue = defaultValueOrFactory switch
                         {
-                            var getMethod = propertyInfo.GetGetMethod();
-                            foreach (var element in list!)
-                            {
-                                var childValue = (TElementProperty?)childGetMethod.Invoke(element, null);
-                                if (Equals(childValue, default(TElementProperty)))
-                                {
-                                    var defaultValue = defaultValueOrFactory switch
-                                    {
-                                        Func<TElementProperty> factory => factory(),
-                                        Func<T, TElementProperty> factory => factory(instance),
-                                        Func<TProperty, TElementProperty> factory => factory(element),
-                                        null => default,
-                                        _ => (TElementProperty)defaultValueOrFactory
-                                    };
+                            Func<TElementProperty> factory => factory(),
+                            Func<T, TElementProperty> factory => factory(instance),
+                            Func<TProperty, TElementProperty> factory => factory(element),
+                            null => default,
+                            _ => (TElementProperty)defaultValueOrFactory
+                        };
 
-                                    childSetMethod.Invoke(element, [defaultValue]);
-                                }
-                            }
-                        }
-                    };
+                        SetChildValue(element, defaultValue);
+                    }
                 }
             }
-        }
+        };
     }
 }
