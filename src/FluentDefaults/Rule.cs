@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace FluentDefaults;
 
-internal class Rule<T>
+internal sealed class Rule<T>
 {
     internal Action<T>? Action { get; set; }
 
@@ -37,7 +36,7 @@ internal class Rule<T>
     internal void Apply(T target)
     {
         if (Action is not null)
-        { 
+        {
             Action(target);
         }
     }

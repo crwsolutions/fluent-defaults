@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides a base class for building rules that specify conditions for applying default values to properties or fields.
 /// </summary>
-public class WhenRuleBuilder<T>
+public sealed class WhenRuleBuilder<T>
 {
     internal readonly Rule<T> _rule;
 

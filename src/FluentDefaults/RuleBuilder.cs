@@ -5,7 +5,7 @@ namespace FluentDefaults;
 /// <summary>
 /// Provides a builder for defining rules that apply default values to properties or fields.
 /// </summary>
-public class RuleBuilder<T, TProperty> 
+public sealed class RuleBuilder<T, TProperty> 
 {
     internal readonly Rule<T> _rule;
 
