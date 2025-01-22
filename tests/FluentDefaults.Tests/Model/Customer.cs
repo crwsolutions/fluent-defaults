@@ -16,6 +16,7 @@ internal sealed class Customer
     public Address Address1 { get; set; } = new Address();
     public Address Address2 { get; set; } = default!;
     public Address Address3 { get; set; } = default!;
+    public Address Address4 { get; set; } = default!;
     public Address? OptionalAddress1 { get; set; }
     public Address? OptionalAddress2 { get; set; }
 }

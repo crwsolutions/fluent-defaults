@@ -54,3 +54,19 @@ defaulter.Apply(customer);
 
 Console.WriteLine(customer.Address.Street); // Output: '- unknown street -'
 ```
+
+### Reference to parent object
+
+It is also possible to give the 'Child' defaulter access to the 'Parent' object.
+
+### Example
+
+```csharp
+internal sealed class ComplexCustomerDefaulter : AbstractDefaulter<Customer>
+{
+    internal ComplexCustomerDefaulter()
+    {
+        DefaultFor(x => x.Address).SetDefaulter((x) => new ComplexAddressDefaulter(x));
+    }
+}
+```

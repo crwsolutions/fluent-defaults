@@ -14,7 +14,18 @@ public class RuleBuilder<T, TProperty> : BaseRuleBuilder<T, TProperty>
     /// </summary>
     /// <param name="defaulter">The defaulter to apply to the property or field.</param>
     /// <exception cref="Exception">Thrown if the property or field does not have a get method or if the member is not found.</exception>
-    public void SetDefaulter(AbstractDefaulter<TProperty> defaulter)
+    public void SetDefaulter(AbstractDefaulter<TProperty> defaulter) => 
+        SetDefaulterImpl(defaulter: defaulter);
+
+    /// <summary>
+    /// Sets a defaulter factory to apply default values to the specified property or field.
+    /// </summary>
+    /// <param name="defaulterFactory">The factory function to create the defaulter to apply to the property or field.</param>
+    /// <exception cref="Exception">Thrown if the property or field does not have a get method or if the member is not found.</exception>
+    public void SetDefaulter(Func<T, AbstractDefaulter<TProperty>> defaulterFactory) =>
+        SetDefaulterImpl(defaulterFactory);
+
+    private void SetDefaulterImpl(Func<T, AbstractDefaulter<TProperty>>? defaulterFactory = null, AbstractDefaulter<TProperty>? defaulter = null)
     {
         if (_rule.MemberExpression?.Member is PropertyInfo propertyInfo)
         {
@@ -27,7 +38,8 @@ public class RuleBuilder<T, TProperty> : BaseRuleBuilder<T, TProperty>
                     var currentValue = (TProperty?)getMethod.Invoke(instance, null);
                     if (!Equals(currentValue, default(TProperty)))
                     {
-                        defaulter.Apply(currentValue!);
+                        var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter; ;
+                        defaulterInstance?.Apply(currentValue!);
                     }
                 };
             }
@@ -43,7 +55,8 @@ public class RuleBuilder<T, TProperty> : BaseRuleBuilder<T, TProperty>
                 var currentValue = (TProperty?)fieldInfo.GetValue(instance);
                 if (!Equals(currentValue, default(TProperty)))
                 {
-                    defaulter.Apply(currentValue!);
+                    var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter;
+                    defaulterInstance?.Apply(currentValue!);
                 }
             };
         }
