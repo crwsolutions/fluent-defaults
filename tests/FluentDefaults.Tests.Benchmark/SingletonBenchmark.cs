@@ -4,8 +4,8 @@ namespace FluentDefaults.Tests.Benchmark;
 
 //| Method    | Mean       | Error    | StdDev   | Ratio | Gen0   | Allocated | Alloc Ratio |
 //|---------- |-----------:|---------:|---------:|------:|-------:|----------:|------------:|
-//| Transient | 2,390.0 ns | 37.93 ns | 59.05 ns |  1.00 | 0.7973 |    2512 B |        1.00 |
-//| Singleton |   530.2 ns |  4.87 ns |  4.32 ns |  0.22 | 0.0839 |     264 B |        0.11 |
+//| Transient | 1,822.7 ns | 21.89 ns | 20.48 ns |  1.00 | 0.2975 |    2496 B |        1.00 |
+//| Singleton |   468.0 ns |  1.91 ns |  1.69 ns |  0.26 | 0.0429 |     360 B |        0.14 |
 
 [MemoryDiagnoser(true)]
 public class SingletonBenchmark
