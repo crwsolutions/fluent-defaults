@@ -45,7 +45,7 @@ public class CollectionAddress
 
 ## ForEach().SetDefaulter()
 
-It is also possible to set a defaulter for each item in a collection using the `SetDefaulter` method.
+It is also possible to set a defaulter for each item in a collection using the `SetDefaulter` (optional with a reference to the instance) method.
 
 ### Example
 
