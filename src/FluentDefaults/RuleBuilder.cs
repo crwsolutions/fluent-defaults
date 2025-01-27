@@ -90,7 +90,7 @@ public sealed class RuleBuilder<T, TProperty>
             var currentValue = _rule.GetMemberValue<TProperty>(instance);
             if (!Equals(currentValue, default(TProperty)))
             {
-                var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter; ;
+                var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter;
                 defaulterInstance?.Apply(currentValue!);
             }
         };

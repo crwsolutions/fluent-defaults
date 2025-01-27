@@ -14,6 +14,7 @@ public class CollectionDefaultForTests
 
         Assert.Equal("Default Street", customer.Addresses1[0].Street);
         Assert.Equal("Default City", customer.Addresses1[0].City);
+        Assert.Equal("Street 1", customer.Addresses2[0].Street);
     }
 
     [Fact]
@@ -44,12 +45,21 @@ internal sealed class CollectionAddressDefaulter : AbstractDefaulter<Address>
     }
 }
 
+internal sealed class CollectionAddressDefaulterWithParameter : AbstractDefaulter<Address>
+{
+    internal CollectionAddressDefaulterWithParameter(Customer customer)
+    {
+        DefaultFor(x => x.Street).Is($"Street {customer.Number1}");
+    }
+}
+
 internal sealed class CollectionCustomerWithDefaulterDefaulter : AbstractDefaulter<Customer>
 {
     internal CollectionCustomerWithDefaulterDefaulter()
     {
+        DefaultFor(x => x.Number1).Is(1);
         ForEach(x => x.Addresses1).SetDefaulter(new CollectionAddressDefaulter());
-        ForEach(x => x.Addresses2).SetDefaulter(new CollectionAddressDefaulter());
+        ForEach(x => x.Addresses2).SetDefaulter((x) => new CollectionAddressDefaulterWithParameter(x));
     }
 }
 
@@ -71,3 +81,4 @@ internal sealed class CollectionCustomerWithDefaultForDefaulter : AbstractDefaul
 
     private int GetNumber() => ++_number;
 }
+

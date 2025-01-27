@@ -12,6 +12,7 @@ internal sealed class Customer
 
     public Address[] Addresses1 { get; set; } = [new Address()];
     public List<Address> Addresses2 { get; set; } = [new Address(), new Address(), new Address()];
+    public Address[] Addresses3 { get; set; } = [new Address()];
 
     public Address Address1 { get; set; } = new Address();
     public Address Address2 { get; set; } = default!;
