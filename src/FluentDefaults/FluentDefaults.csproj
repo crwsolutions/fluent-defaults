@@ -7,7 +7,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<PackageId>FluentDefaults</PackageId>
-		<VersionSuffix Condition="'$(VersionSuffix)' == ''">0-rc.5</VersionSuffix>
+		<VersionSuffix Condition="'$(VersionSuffix)' == ''">0-rc.6</VersionSuffix>
 		<Version>1.0.$(VersionSuffix)</Version>
 		<Authors>Colin Wilmans</Authors>
 		<PackageDescription>A library for .NET that uses a fluent interface for setting default values, similar to how FluentValidation handles validations.</PackageDescription>
@@ -22,7 +22,7 @@
 		<Description>A library for .NET that uses a fluent interface for setting defaults</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Title>Fluent Defaults</Title>
-		<PackageReleaseNotes>SetDefaulter can also receive an reference to an instance. Made the Api more strict. Eg it can only be DefaultFor().Is().When()</PackageReleaseNotes>
+		<PackageReleaseNotes>Some minor rewrite, does not change anything</PackageReleaseNotes>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
