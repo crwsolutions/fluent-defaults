@@ -79,3 +79,15 @@ defaulter.Apply(customer);
 
 Console.WriteLine(customer.Addresses1[0].Street); // Output: '- unknown street -'
 ```
+
+> **Warning:**
+> If deferred execution is detected, a `DeferredExecutionException` will be thrown:
+> 
+> This is the check:
+> ```csharp
+> if (!(currentValue is ICollection || currentValue is Array))
+> {
+>     throw new DeferredExecutionException("Deferred execution detected. Please ensure the collection is materialized.");
+> }
+> ```
+> To avoid this issue, ensure the collection is materialized (e.g., using `.ToList()` or `.ToArray()`) before applying operations.

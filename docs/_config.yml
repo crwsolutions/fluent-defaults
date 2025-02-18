@@ -15,6 +15,8 @@ sidebar:
       url: "di"
     - title: "Asynchronous defaults"
       url: "async"
+    - title: "Chaining"
+      url: "chaining"
 
 # Breadcrumb
 breadcrumb_home_label : "Home"
