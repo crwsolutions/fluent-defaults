@@ -1,4 +1,5 @@
-﻿using FluentDefaults.Tests.Model;
+﻿using FluentDefaults.Extensions;
+using FluentDefaults.Tests.Model;
 using System.Diagnostics;
 
 namespace FluentDefaults.Tests;
@@ -19,6 +20,27 @@ public class AsyncDefaulterTests
         stopwatch.Stop();
 
         // Assert
+        Assert.Equal(12, customer.Number1);
+        Assert.Equal(42, customer.NullableNumber2);
+        Assert.Equal(24, customer.FieldNumber3);
+        Assert.InRange(stopwatch.ElapsedMilliseconds, 500, 600); // Allowing some margin for timing
+    }
+
+    [Fact]
+    public async Task DoWorkViaExtensionMethodAsync_ShouldCompleteAfter500Milliseconds()
+    {
+        // Arrange
+        var customer = new Customer();
+        var defaulter = new AsyncCustomerDefaulter();
+        var stopwatch = Stopwatch.StartNew();
+
+        // Act
+        var customerWithDefaults = await customer.ApplyDefaulterAsync(defaulter);
+
+        stopwatch.Stop();
+
+        // Assert
+        Assert.Equal(customer, customerWithDefaults);
         Assert.Equal(12, customer.Number1);
         Assert.Equal(42, customer.NullableNumber2);
         Assert.Equal(24, customer.FieldNumber3);

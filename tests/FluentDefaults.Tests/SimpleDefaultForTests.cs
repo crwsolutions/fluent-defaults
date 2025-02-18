@@ -1,4 +1,5 @@
-﻿using FluentDefaults.Tests.Model;
+﻿using FluentDefaults.Extensions;
+using FluentDefaults.Tests.Model;
 
 namespace FluentDefaults.Tests;
 
@@ -10,8 +11,9 @@ public class SimpleDefaultForTests
         var customer = new Customer();
         var defaulter = new CustomerDefaulter();
 
-        defaulter.Apply(customer);
+        var customerWithDefaults = customer.ApplyDefaulter(defaulter);
 
+        Assert.Equal(customer, customerWithDefaults);
         Assert.Equal(1, customer.Number1);
     }
 
