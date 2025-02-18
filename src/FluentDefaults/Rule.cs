@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace FluentDefaults;
@@ -11,7 +12,7 @@ internal sealed class Rule<T>
 
     internal Func<T, bool>? Condition { get; private set; }
 
-    internal MemberExpression MemberExpression { private get; set; }
+    internal MemberExpression MemberExpression { get; set; }
 
     internal IEnumerable<TProperty>? GetCollectionValue<TProperty>(T instance)
     {
@@ -128,6 +129,12 @@ internal sealed class Rule<T>
             var collection = GetCollectionValue<TProperty>(instance);
             if (!Equals(collection, default(TProperty)))
             {
+                if (!(collection is ICollection || collection is Array))
+                {
+                    // Throw a custom exception with member information
+                    throw new DeferredExecutionException($"{MemberExpression} => {ChildMemberExpression}");
+                }
+
                 foreach (var element in collection!)
                 {
                     var childValue = GetChildValue<TProperty, TElementProperty>(element);

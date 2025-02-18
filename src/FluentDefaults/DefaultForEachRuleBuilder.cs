@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 
 namespace FluentDefaults;
 
@@ -36,6 +37,13 @@ public sealed class DefaultForEachRuleBuilder<T, TProperty>
             var currentValue = _rule.GetCollectionValue<TProperty>(instance);
             if (!Equals(currentValue, default(TProperty)))
             {
+
+                if (!(currentValue is ICollection || currentValue is Array))
+                {
+                    // Throw a custom exception with member information
+                    throw new DeferredExecutionException(_rule.MemberExpression.ToString());
+                }
+
                 foreach (var element in currentValue!)
                 {
                     var defaulterInstance = defaulterFactory != null ? defaulterFactory(instance) : defaulter;
