@@ -21,39 +21,88 @@ internal sealed class Rule<T>
 
     private TElementProperty? GetChildValue<TProperty, TElementProperty>(TProperty element)
     {
-        return (TElementProperty?)(ChildMemberExpression!.Member as PropertyInfo)?.GetGetMethod()?.Invoke(element, null);
-    }
+        var (target, member) = GetTargetAndMember(ChildMemberExpression!, element);
 
-    private void SetChildValue<TProperty, TElementProperty>(TProperty element, TElementProperty? defaultValue)
-    {
-        (ChildMemberExpression!.Member as PropertyInfo)?.GetSetMethod()?.Invoke(element, [defaultValue]);
-    }
-
-    internal TProperty? GetMemberValue<TProperty>(T instance)
-    {
-        return MemberExpression.Member switch
+        return member switch
         {
-            PropertyInfo propertyInfo => (TProperty?)propertyInfo.GetGetMethod()?.Invoke(instance, null),
-            FieldInfo fieldInfo => (TProperty?)fieldInfo.GetValue(instance),
+            PropertyInfo prop => (TElementProperty?)prop.GetValue(target),
+            FieldInfo field => (TElementProperty?)field.GetValue(target),
             _ => throw new Exception("Unsupported member type")
         };
     }
 
-    private void SetMemberValue<TProperty>(T instance, TProperty? defaultValue)
+    private void SetChildValue<TProperty, TElementProperty>(TProperty element, TElementProperty? value)
     {
-        if (MemberExpression.Member is PropertyInfo propertyInfo)
+        var (target, member) = GetTargetAndMember(ChildMemberExpression!, element);
+
+        switch (member)
         {
-            propertyInfo.GetSetMethod()?.Invoke(instance, [defaultValue]);
-        }
-        else if (MemberExpression.Member is FieldInfo fieldInfo)
-        {
-            fieldInfo.SetValue(instance, defaultValue);
-        }
-        else
-        {
-            throw new Exception("Member is not a Property or Field");
+            case PropertyInfo prop:
+                prop.GetSetMethod()?.Invoke(target, [value]);
+                break;
+            case FieldInfo field:
+                field.SetValue(target, value);
+                break;
+            default:
+                throw new Exception("Unsupported member type");
         }
     }
+
+    internal TProperty? GetMemberValue<TProperty>(T instance)
+    {
+        var (target, member) = GetTargetAndMember(MemberExpression, instance);
+        return member switch
+        {
+            PropertyInfo prop => (TProperty?)prop.GetValue(target),
+            FieldInfo field => (TProperty?)field.GetValue(target),
+            _ => throw new Exception("Unsupported member type")
+        };
+    }
+
+    private void SetMemberValue<TProperty>(T instance, TProperty? value)
+    {
+        var (target, member) = GetTargetAndMember(MemberExpression, instance);
+        switch (member)
+        {
+            case PropertyInfo prop:
+                prop.GetSetMethod()?.Invoke(target, [value]);
+                break;
+            case FieldInfo field:
+                field.SetValue(target, value);
+                break;
+            default:
+                throw new Exception("Member is not a Property or Field");
+        }
+    }
+
+
+    private static (object? target, MemberInfo member) GetTargetAndMember(Expression memberExpression, object? instance)
+    {
+        object? current = instance;
+        var stack = new Stack<MemberExpression>();
+
+        Expression? expr = memberExpression;
+        while (expr is MemberExpression m)
+        {
+            stack.Push(m);
+            expr = m.Expression;
+        }
+
+        while (stack.Count > 1)
+        {
+            var m = stack.Pop();
+            current = m.Member switch
+            {
+                PropertyInfo prop => prop.GetValue(current),
+                FieldInfo field => field.GetValue(current),
+                _ => throw new Exception("Unsupported member type")
+            };
+        }
+
+        var lastMember = stack.Pop();
+        return (current, lastMember.Member);
+    }
+
 
     internal MemberExpression? ChildMemberExpression { get; set; }
 

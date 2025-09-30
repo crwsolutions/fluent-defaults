@@ -13,6 +13,19 @@ internal sealed class Customer
     public Address[] Addresses1 { get; set; } = [new Address()];
     public List<Address> Addresses2 { get; set; } = [new Address(), new Address(), new Address()];
     public Address[] Addresses3 { get; set; } = [new Address()];
+    public Dictionary<string, Address> Addresses4 { get; set; } = new Dictionary<string, Address>
+    {
+        { "key1", new Address() },
+        { "key2", new Address() },
+        { "key3", new Address() }
+    };
+
+    public Dictionary<string, Address> Addresses5 { get; set; } = new Dictionary<string, Address>
+    {
+        { "key1", new Address() },
+        { "key2", new Address() },
+        { "key3", new Address() }
+    };
 
     public Address Address1 { get; set; } = new Address();
     public Address Address2 { get; set; } = default!;
