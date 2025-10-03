@@ -8,6 +8,7 @@ public class DictionaryDefaultForTests
     public void DictionaryWithDefaulter_ShouldGetThatDefault()
     {
         var customer = new Customer();
+        customer.Addresses4.First().Value.Specs = [new() { Spec = SpecsEnum.Garage }];
         var defaulter = new DictionaryCustomerWithDefaulterDefaulter();
 
         defaulter.Apply(customer);
@@ -15,12 +16,14 @@ public class DictionaryDefaultForTests
         Assert.Equal("Default Street", customer.Addresses4["key1"].Street);
         Assert.Equal("Default City", customer.Addresses4["key1"].City);
         Assert.Equal("Street 1", customer.Addresses5["key1"].Street);
+        Assert.Equal("", customer.Addresses4["key1"].Specs!.First().Description);
     }
 
     [Fact]
     public void DictionaryWithDefaultFor_ShouldGetThatDefault()
     {
         var customer = new Customer();
+
         var defaulter = new DictionaryCustomerWithDefaultForDefaulter();
 
         defaulter.Apply(customer);
@@ -41,6 +44,15 @@ internal sealed class DictionaryAddressDefaulter : AbstractDefaulter<KeyValuePai
     {
         DefaultFor(x => x.Value.Street).Is("Default Street");
         DefaultFor(x => x.Value.City).Is("Default City");
+        ForEach(x => x.Value.Specs).SetDefaulter(new HouseSpecDefaulter());
+    }
+}
+
+internal sealed class HouseSpecDefaulter : AbstractDefaulter<HouseSpec>
+{
+    internal HouseSpecDefaulter()
+    {
+        DefaultFor(x => x.Description).Is("");
     }
 }
 
