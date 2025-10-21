@@ -16,7 +16,8 @@ internal sealed class Rule<T>
 
     internal IEnumerable<TProperty>? GetCollectionValue<TProperty>(T instance)
     {
-        return (IEnumerable<TProperty>?)(MemberExpression?.Member as PropertyInfo)?.GetGetMethod()?.Invoke(instance, null);
+        var (target, member) = GetTargetAndMember(MemberExpression, instance);
+        return (IEnumerable<TProperty>?)(member as PropertyInfo)?.GetGetMethod()?.Invoke(target, null);
     }
 
     private TElementProperty? GetChildValue<TProperty, TElementProperty>(TProperty element)
