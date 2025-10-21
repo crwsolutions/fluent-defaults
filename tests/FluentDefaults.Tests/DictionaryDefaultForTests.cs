@@ -17,6 +17,8 @@ public class DictionaryDefaultForTests
         Assert.Equal("Default City", customer.Addresses4["key1"].City);
         Assert.Equal("Street 1", customer.Addresses5["key1"].Street);
         Assert.Equal("", customer.Addresses4["key1"].Specs!.First().Description);
+        Assert.Equal("Default Street", customer.Addresses6["key1"].Street);
+        Assert.Equal("Street 1", customer.Addresses7["key1"].Street);
     }
 
     [Fact]
@@ -71,6 +73,8 @@ internal sealed class DictionaryCustomerWithDefaulterDefaulter : AbstractDefault
         DefaultFor(x => x.Number1).Is(1);
         ForEach(x => x.Addresses4).SetDefaulter(new DictionaryAddressDefaulter());
         ForEach(x => x.Addresses5).SetDefaulter((x) => new DictionaryAddressDefaulterWithParameter(x));
+        ForEach(x => x.Addresses6).DefaultFor(x => x.Value).SetDefaulter(new DictionaryAddressDefaulter());
+        ForEach(x => x.Addresses7).DefaultFor(x => x.Value).SetDefaulter((y) => new DictionaryAddressDefaulterWithParameter(y));
     }
 }
 
