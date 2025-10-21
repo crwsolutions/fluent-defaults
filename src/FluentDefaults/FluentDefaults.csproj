@@ -7,8 +7,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<PackageId>FluentDefaults</PackageId>
-		<VersionSuffix Condition="'$(VersionSuffix)' == ''">1</VersionSuffix>
-		<Version>1.2.$(VersionSuffix)</Version>
+		<VersionSuffix Condition="'$(VersionSuffix)' == ''">0</VersionSuffix>
+		<Version>1.3.$(VersionSuffix)</Version>
 		<Authors>Colin Wilmans</Authors>
 		<PackageDescription>A library for .NET that uses a fluent interface for setting default values, similar to how FluentValidation handles validations.</PackageDescription>
 		<RepositoryUrl>https://github.com/crwsolutions/fluent-defaults.git</RepositoryUrl>
@@ -22,7 +22,7 @@
 		<Description>A library for .NET that uses a fluent interface for setting defaults</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Title>Fluent Defaults</Title>
-		<PackageReleaseNotes>Improved member value retrieval and setting with better expression handling. This also results in support for Dictionaries</PackageReleaseNotes>
+		<PackageReleaseNotes>Added ForEach().DefaultFor().SetDefaulter()</PackageReleaseNotes>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
