@@ -80,7 +80,7 @@ defaulter.Apply(customer);
 Console.WriteLine(customer.Addresses1[0].Street); // Output: '- unknown street -'
 ```
 
-> **Warning:**
+> [!WARNING]
 > If deferred execution is detected, a `DeferredExecutionException` will be thrown:
 > 
 > This is the check:
