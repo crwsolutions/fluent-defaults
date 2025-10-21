@@ -80,7 +80,7 @@ defaulter.Apply(customer);
 Console.WriteLine(customer.Addresses1[0].Street); // Output: '- unknown street -'
 ```
 
-> [!WARNING]
+> **Warning:**
 > If deferred execution is detected, a `DeferredExecutionException` will be thrown:
 > 
 > This is the check:
@@ -91,3 +91,5 @@ Console.WriteLine(customer.Addresses1[0].Street); // Output: '- unknown street -
 > }
 > ```
 > To avoid this issue, ensure the collection is materialized (e.g., using `.ToList()` or `.ToArray()`) before applying operations.
+{:.warning}
+{:title="Warning"}
