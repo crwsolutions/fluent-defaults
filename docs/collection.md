@@ -7,6 +7,43 @@ title: "Collections"
 
 The `FluentDefaults` library supports default values for collections using the `ForEach` method to apply the same rule to multiple items in a collection.
 
+## ForEach().SetDefaulter()
+
+It is also possible to set a defaulter for each item in a collection using the `SetDefaulter` (optional with a reference to the instance) method.
+
+### Example
+
+```csharp
+using FluentDefaults;
+
+public class CollectionAddressDefaulter : AbstractDefaulter<CollectionAddress>
+{
+    public CollectionAddressDefaulter()
+    {
+        DefaultFor(x => x.Street).Is("- unknown street -");
+    }
+}
+
+public class CollectionCustomerDefaulter : AbstractDefaulter<CollectionCustomer>
+{
+    public CollectionCustomerDefaulter()
+    {
+        ForEach(x => x.Addresses).SetDefaulter(new CollectionAddressDefaulter());
+    }
+}
+```
+
+You can then apply the default values to an instance of the `CollectionCustomer` class:
+
+```csharp
+var customer = new CollectionCustomer();
+var defaulter = new CollectionCustomerDefaulter();
+
+defaulter.Apply(customer);
+
+Console.WriteLine(customer.Addresses1[0].Street); // Output: '- unknown street -'
+```
+
 ## ForEach().DefaultFor().Is()
 
 The `ForEach` method is used to iterate over each item in a specified collection property of an object. It allows you to apply rules or actions to each item within the collection. The `DefaultFor` method is used to specify a property of the items within the collection that you want to set a default value for. The `Is` method is used to assign the default value to the specified property. It is called after `DefaultFor` to set the value that should be used if the property is not already set. You can pass a fixed value or a function (eg `() => Guid.NewGuid()`)
@@ -43,41 +80,40 @@ public class CollectionAddress
 }
 ```
 
-## ForEach().SetDefaulter()
+## ForEach().DefaultFor().SetDefaulter()
 
-It is also possible to set a defaulter for each item in a collection using the `SetDefaulter` (optional with a reference to the instance) method.
+This method allows you to apply a defaulter to a specific property of each item in a collection. This is particularly useful when working with dictionaries or other collection types where you want to set default values for nested objects.
 
-### Example
+### Example with Dictionary
 
 ```csharp
-using FluentDefaults;
-
-public class CollectionAddressDefaulter : AbstractDefaulter<CollectionAddress>
+public class AddressDefaulter : AbstractDefaulter<Address>
 {
-    public CollectionAddressDefaulter()
+    public AddressDefaulter()
     {
         DefaultFor(x => x.Street).Is("- unknown street -");
+        DefaultFor(x => x.City).Is("- unknown city -");
     }
 }
 
-public class CollectionCustomerDefaulter : AbstractDefaulter<CollectionCustomer>
+public class CustomerDefaulter : AbstractDefaulter<Customer>
 {
-    public CollectionCustomerDefaulter()
+    public CustomerDefaulter()
     {
-        ForEach(x => x.Addresses).SetDefaulter(new CollectionAddressDefaulter());
+        ForEach(x => x.Addresses).DefaultFor(x => x.Value).SetDefaulter(new AddressDefaulter());
     }
 }
-```
 
-You can then apply the default values to an instance of the `CollectionCustomer` class:
+public class Customer
+{
+    public Dictionary<string, Address> Addresses { get; set; } = new Dictionary<string, Address>();
+}
 
-```csharp
-var customer = new CollectionCustomer();
-var defaulter = new CollectionCustomerDefaulter();
-
-defaulter.Apply(customer);
-
-Console.WriteLine(customer.Addresses1[0].Street); // Output: '- unknown street -'
+public class Address
+{
+    public string? Street { get; set; }
+    public string? City { get; set; }
+}
 ```
 
 > **Warning:**
