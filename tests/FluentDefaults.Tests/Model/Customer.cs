@@ -4,7 +4,7 @@ internal sealed class Customer
     public int Number1 { get; set; }
     public int? NullableNumber2 { get; set; }
 
-    public int FieldNumber3;
+    public int FieldNumber3 = default;
 
     public int Number4 { get; set; }
 
