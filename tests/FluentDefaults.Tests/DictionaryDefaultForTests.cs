@@ -46,7 +46,7 @@ internal sealed class DictionaryAddressDefaulter : AbstractDefaulter<KeyValuePai
     {
         DefaultFor(x => x.Value.Street).Is("Default Street");
         DefaultFor(x => x.Value.City).Is("Default City");
-        ForEach(x => x.Value.Specs).SetDefaulter(new HouseSpecDefaulter());
+        ForEach(x => x.Value.Specs!).SetDefaulter(new HouseSpecDefaulter());
     }
 }
 
